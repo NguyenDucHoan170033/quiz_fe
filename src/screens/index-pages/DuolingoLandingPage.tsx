@@ -10,7 +10,7 @@ const DuolingoLandingPage: React.FC = () => {
          
           <div className="!absolute !left-20 !bottom-60">
             <div className=" !flex !items-center !justify-center ">
-              <img src="/Background+Shadow 2.svg" alt="Learn icon" className="!w-50 !h-35" />
+              <img src="/Background+Shadow2.svg" alt="Learn icon" className="!w-50 !h-35" />
             </div>
           </div>
 
@@ -24,7 +24,7 @@ const DuolingoLandingPage: React.FC = () => {
           {/* Right side icons */}
           <div className="!absolute !right-10 !top-16">
             <div className=" !flex !items-center !justify-center ">
-              <img src="/Background+Shadow 4.svg" alt="Practice icon" className="!w-50 !h-35" />
+              <img src="/Background+Shadow4.svg" alt="Practice icon" className="!w-50 !h-35" />
             </div>
           </div>
           

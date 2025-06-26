@@ -40,7 +40,7 @@ const FlexibleLearningSection: React.FC = () => {
         <div className="absolute left-[65%] bottom-[10%]">
           <div className=" flex items-center justify-center transform -rotate-30 ">
             <img 
-              src="/Background+Shadow 2.svg" 
+              src="/Background+Shadow2.svg" 
               alt="Teal icon" 
               className="w-40 h-50"
             />
@@ -51,7 +51,7 @@ const FlexibleLearningSection: React.FC = () => {
         <div className="absolute right-[1%] bottom-[15%]">
           <div className=" flex items-center justify-center transform rotate-6 ">
             <img 
-              src="/Background+Shadow 3.svg" 
+              src="/Background+Shadow3.svg" 
               alt="Green icon" 
               className="w-40 h-50"
             />
