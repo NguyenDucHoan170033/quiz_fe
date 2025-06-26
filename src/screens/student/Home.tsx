@@ -4,6 +4,7 @@ import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE_URL from '../../config/api';
 
 interface Participant {
   userId: string;
@@ -51,14 +52,11 @@ const StudentHome: React.FC = () => {
   // Fetch participants for an existing session
   const fetchParticipants = async (code: string) => {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/api/sessions/${code}/participants`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+      const response = await axios.get(`${API_BASE_URL}api/sessions/${code}/participants`, {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-      );
+      });
       setParticipants(response.data);
     } catch (err) {
       console.error('Failed to fetch participants:', err);
@@ -72,7 +70,7 @@ const StudentHome: React.FC = () => {
     if (!token) return;
 
     const client = new Client({
-      webSocketFactory: () => new SockJS('http://localhost:8080/ws-sessions'),
+      webSocketFactory: () => new SockJS(`${API_BASE_URL}ws-sessions`),
       connectHeaders: { Authorization: `Bearer ${token}` },
       onConnect: () => {
         console.log('WebSocket Connected!');
@@ -149,16 +147,12 @@ const StudentHome: React.FC = () => {
         throw new Error("Unable to identify student. Please login again.");
       }
 
-      const response = await axios.post(
-        `http://localhost:8080/api/sessions/join/${roomCode}`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'X-Student-Id': studentId
-          }
+      const response = await axios.post(`${API_BASE_URL}api/sessions/join/${roomCode}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'X-Student-Id': studentId
         }
-      );
+      });
 
       if (response.data.success) {
         setJoined(true);
@@ -180,16 +174,12 @@ const StudentHome: React.FC = () => {
   const handleLeaveSession = async () => {
     const studentId = getStudentId();
     try {
-      await axios.post(
-        `http://localhost:8080/api/sessions/leave/${roomCode}`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'X-Student-Id': studentId
-          }
+      await axios.post(`${API_BASE_URL}api/sessions/leave/${roomCode}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'X-Student-Id': studentId
         }
-      );
+      });
 
       if (stompClient) {
         stompClient.deactivate();

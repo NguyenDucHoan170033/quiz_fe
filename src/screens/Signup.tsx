@@ -1,6 +1,7 @@
 import React, { useState, useEffect, ChangeEvent, FocusEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -187,7 +188,7 @@ const Signup = () => {
     setMessage('');
 
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/register', formData);
+      const response = await axios.post(`${API_BASE_URL}api/auth/register`, formData);
       if (response.status === 200) {
         setMessage('Mã OTP đã được gửi đến email của bạn. Vui lòng kiểm tra email.');
         navigate('/checkotp', { state: { email: formData.email } });

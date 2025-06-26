@@ -8,6 +8,7 @@ import { BookOpen, Plus, Eye, EyeOff, RefreshCw, ChevronRight, Users, Calendar, 
 import Sidebar from "../../layout/teacher/teacherSidebar"
 import Header from "../../layout/teacher/teacherHeader";
 import "../../style/teacher-create-class.css"
+import API_BASE_URL from '../../config/api';
 
 
 
@@ -34,7 +35,7 @@ const TeacherCreateClass = () => {
     const fetchClasses = async () => {
       try {
         setLoading(true)
-        const response = await axios.get("http://localhost:8080/api/classes/teacher", {
+        const response = await axios.get(`${API_BASE_URL}api/classes/teacher`, {
           headers: {
             Authorization: `Bearer ${token}`,
             "X-Teacher-Id": JSON.parse(atob(token.split(".")[1])).sub,
@@ -70,7 +71,7 @@ const TeacherCreateClass = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/classes",
+        `${API_BASE_URL}api/classes`,
         {
           name: className,
           description: description,
@@ -113,7 +114,7 @@ const TeacherCreateClass = () => {
   const generateNewCode = async (classId) => {
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/classes/${classId}/generate-code`,
+        `${API_BASE_URL}api/classes/${classId}/generate-code`,
         {},
         {
           headers: {
@@ -167,7 +168,7 @@ const TeacherCreateClass = () => {
     // If we don't have the code yet, fetch it
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/classes/${classId}/generate-code`,
+        `${API_BASE_URL}api/classes/${classId}/generate-code`,
         {},
         {
           headers: {

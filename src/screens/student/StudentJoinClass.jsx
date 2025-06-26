@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
 import '../../style/student-join-class.css';
+import API_BASE_URL from '../../config/api';
 
 const StudentJoinClass = () => {
     const { token } = useAuth();
@@ -26,7 +27,7 @@ const StudentJoinClass = () => {
         const fetchClasses = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get('http://localhost:8080/api/classes/student', {
+                const response = await axios.get(`${API_BASE_URL}api/classes/student`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -61,7 +62,7 @@ const StudentJoinClass = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:8080/api/classes/join', {
+            const response = await axios.post(`${API_BASE_URL}api/classes/join`, {
                 classCode: classCode
             }, {
                 headers: {

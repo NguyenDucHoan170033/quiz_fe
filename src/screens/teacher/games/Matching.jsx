@@ -3,6 +3,7 @@ import "../../../style/game-matching.css";
 import { Plus, Trash2, X, ImageIcon } from "lucide-react";
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
+import API_BASE_URL from '../../../config/api';
 
 const MatchingForm = ({
   contentItems,
@@ -65,7 +66,7 @@ const MatchingForm = ({
     formData.append("file", file);
 
     try {
-      const res = await axios.post("http://localhost:8080/api/upload/image", formData, {
+      const res = await axios.post(`${API_BASE_URL}api/upload/image`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",

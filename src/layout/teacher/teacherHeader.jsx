@@ -3,6 +3,7 @@ import { useLocation, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import "../../style/teacher-header.css"
 import axios from 'axios';
+import API_BASE_URL from '../../config/api';
 
 const teacherHeader = () => {
   const { name, role, token } = useAuth();
@@ -24,16 +25,15 @@ const teacherHeader = () => {
   useEffect(() => {
     const fetchAvatar = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/api/user/profile", {
+        const res = await axios.get(`${API_BASE_URL}api/user/profile`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        setAvatarUrl(res.data.avatarUrl);
-      } catch (err) {
-        console.error("Failed to fetch avatar", err);
+      } catch (error) {
+        console.error('Error fetching avatar:', error);
       }
     };
-    
-    if (token) fetchAvatar();
+
+    fetchAvatar();
   }, [token]);
 
   // Đóng dropdown khi click bên ngoài

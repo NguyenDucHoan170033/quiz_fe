@@ -4,6 +4,7 @@ import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE_URL from '../../config/api';
 
 const TeacherCreateRoom = () => {
   const { token } = useAuth();
@@ -91,7 +92,7 @@ const TeacherCreateRoom = () => {
 
   const fetchSessionDetails = async (code) => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/sessions/${code}`, {
+      const response = await axios.get(`${API_BASE_URL}api/sessions/${code}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -100,7 +101,7 @@ const TeacherCreateRoom = () => {
       const session = response.data;
       setParticipants(session.participants || []);
       const participantsResponse = await axios.get(
-        `http://localhost:8080/api/sessions/${code}/participants`,
+        `${API_BASE_URL}api/sessions/${code}/participants`,
         {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -140,7 +141,7 @@ const TeacherCreateRoom = () => {
       let gamesData = [];
       try {
         console.log("Fetching games...");
-        const gamesResponse = await axios.get('http://localhost:8080/api/games/teacher', {
+        const gamesResponse = await axios.get(`${API_BASE_URL}api/games/teacher`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'X-Teacher-Id': teacherId
@@ -156,7 +157,7 @@ const TeacherCreateRoom = () => {
       let classesData = [];
       try {
         console.log("Fetching classes...");
-        const classesResponse = await axios.get('http://localhost:8080/api/classes/teacher', {
+        const classesResponse = await axios.get(`${API_BASE_URL}api/classes/teacher`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'X-Teacher-Id': teacherId
@@ -185,7 +186,7 @@ const TeacherCreateRoom = () => {
     console.log('Setting up WebSocket with access code:', accessCode);
 
     const client = new Client({
-      webSocketFactory: () => new SockJS('http://localhost:8080/ws-sessions'),
+      webSocketFactory: () => new SockJS(`${API_BASE_URL}ws-sessions`),
       connectHeaders: {
         Authorization: `Bearer ${token}`
       },
@@ -283,7 +284,7 @@ const TeacherCreateRoom = () => {
       console.log(`Creating room with gameId: ${selectedGame} and classId: ${selectedClass}`);
 
       const response = await axios.post(
-        `http://localhost:8080/api/sessions/create`,
+        `${API_BASE_URL}api/sessions/create`,
         null,
         {
           headers: {
@@ -316,7 +317,7 @@ const TeacherCreateRoom = () => {
     const teacherId = getTeacherId();
 
     try {
-      await axios.post(`http://localhost:8080/api/sessions/start/${sessionId}`, null, {
+      await axios.post(`${API_BASE_URL}api/sessions/start/${sessionId}`, null, {
         headers: {
           Authorization: `Bearer ${token}`,
           'X-Teacher-Id': teacherId
@@ -335,7 +336,7 @@ const TeacherCreateRoom = () => {
     const teacherId = getTeacherId();
 
     try {
-      await axios.post(`http://localhost:8080/api/sessions/end/${sessionId}`, null, {
+      await axios.post(`${API_BASE_URL}api/sessions/end/${sessionId}`, null, {
         headers: {
           Authorization: `Bearer ${token}`,
           'X-Teacher-Id': teacherId
@@ -815,7 +816,7 @@ const TeacherCreateRoom = () => {
   return (
     <div className="teacher-game-session-container relative min-h-screen bg-gray-50">
       {/* Background Image */}
-      <div className="fixed inset-0 bg-[url('../../../public/gametest.gif')] bg-cover bg-center bg-no-repeat opacity-20"></div>
+      <div className="fixed inset-0 bg-[url('../../../gametest.gif')] bg-cover bg-center bg-no-repeat opacity-20"></div>
 
       {/* Content */}
       <div className="relative z-10">

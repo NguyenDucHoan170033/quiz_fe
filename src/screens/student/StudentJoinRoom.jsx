@@ -4,6 +4,7 @@ import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE_URL from '../../config/api';
 
 const StudentJoinRoom = () => {
   const { token } = useAuth();
@@ -53,14 +54,11 @@ const StudentJoinRoom = () => {
   const fetchParticipants = async (code) => {
     try {
       console.log(`Fetching participants for session with code: ${code}`);
-      const response = await axios.get(
-        `http://localhost:8080/api/sessions/${code}/participants`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+      const response = await axios.get(`${API_BASE_URL}api/sessions/${code}/participants`, {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-      );
+      });
       console.log("Participants received:", response.data);
       setParticipants(response.data);
     } catch (err) {
@@ -80,7 +78,7 @@ const StudentJoinRoom = () => {
     console.log('Setting up WebSocket with access code:', sessionAccessCode);
 
     const client = new Client({
-      webSocketFactory: () => new SockJS('http://localhost:8080/ws-sessions'),
+      webSocketFactory: () => new SockJS(`${API_BASE_URL}ws-sessions`),
       connectHeaders: { Authorization: `Bearer ${token}` },
       onConnect: () => {
         console.log('WebSocket Connected!');
@@ -168,16 +166,12 @@ const StudentJoinRoom = () => {
       console.log(`Attempting to join session with code: ${normalizedAccessCode}, student ID: ${studentId}`);
 
       // Join the session
-      const response = await axios.post(
-        `http://localhost:8080/api/sessions/join/${normalizedAccessCode}`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'X-Student-Id': studentId
-          }
+      const response = await axios.post(`${API_BASE_URL}api/sessions/join/${normalizedAccessCode}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'X-Student-Id': studentId
         }
-      );
+      });
 
       console.log("Join response:", response.data);
 
@@ -210,16 +204,12 @@ const StudentJoinRoom = () => {
     const studentId = getStudentId();
     try {
       console.log(`Leaving session with code: ${accessCode}, student ID: ${studentId}`);
-      await axios.post(
-        `http://localhost:8080/api/sessions/leave/${accessCode}`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'X-Student-Id': studentId
-          }
+      await axios.post(`${API_BASE_URL}api/sessions/leave/${accessCode}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'X-Student-Id': studentId
         }
-      );
+      });
 
       if (stompClient) {
         stompClient.deactivate();

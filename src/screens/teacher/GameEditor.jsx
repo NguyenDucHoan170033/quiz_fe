@@ -29,6 +29,7 @@ import FillInBlankForm from "./games/FillInBlank";
 import Sidebar from "../../layout/teacher/teacherSidebar";
 import Header from "../../layout/teacher/teacherHeader";
 import "../../style/game-editor.css";
+import API_BASE_URL from '../../config/api';
 
 const GameActivityEditor = () => {
   const { gameId } = useParams();
@@ -116,7 +117,7 @@ const GameActivityEditor = () => {
     const fetchActivityTypes = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/activities/types",
+          `${API_BASE_URL}api/activities/types`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -138,10 +139,10 @@ const GameActivityEditor = () => {
           throw new Error("Must be logged in");
         }
         const [activitiesResponse, gameResponse] = await Promise.all([
-          axios.get("http://localhost:8080/api/activities/teacher", {
+          axios.get(`${API_BASE_URL}api/activities/teacher`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axios.get(`http://localhost:8080/api/games/${gameId}`, {
+          axios.get(`${API_BASE_URL}api/games/${gameId}`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
@@ -248,12 +249,12 @@ const GameActivityEditor = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:8080/api/activities",
+        `${API_BASE_URL}api/activities`,
         activityToCreate,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const { data: activitiesData } = await axios.get(
-        "http://localhost:8080/api/activities/teacher",
+        `${API_BASE_URL}api/activities/teacher`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setActivities(activitiesData);
@@ -328,7 +329,7 @@ const GameActivityEditor = () => {
         };
         try {
           const response = await axios.post(
-            `http://localhost:8080/api/activities/${updatedGameActivity.activityId}/games/${gameId}`,
+            `${API_BASE_URL}api/activities/${updatedGameActivity.activityId}/games/${gameId}`,
             updatedGameActivity,
             { headers: { Authorization: `Bearer ${token}` } }
           );
@@ -373,7 +374,7 @@ const GameActivityEditor = () => {
   const removeActivityFromGame = async (activityId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/api/activities/${activityId}/games/${gameId}`,
+        `${API_BASE_URL}api/activities/${activityId}/games/${gameId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const activitiesMap = {};
@@ -395,7 +396,7 @@ const GameActivityEditor = () => {
   const reorderActivities = async (activitiesToReorder) => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/api/activities/games/${gameId}/reorder`,
+        `${API_BASE_URL}api/activities/games/${gameId}/reorder`,
         activitiesToReorder,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -572,7 +573,7 @@ const GameActivityEditor = () => {
   const saveGame = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/api/games/${gameId}`,
+        `${API_BASE_URL}api/games/${gameId}`,
         game,
         { headers: { Authorization: `Bearer ${token}` } }
       );

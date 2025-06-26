@@ -4,6 +4,7 @@ import axios from 'axios';
 import { ReactSketchCanvas } from 'react-sketch-canvas';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
+import API_BASE_URL from '../../../config/api';
 
 const TeamChallengeActivity = ({ activity, content, accessCode, contentItem }) => {
     const [teams, setTeams] = useState([]);
@@ -41,7 +42,7 @@ const TeamChallengeActivity = ({ activity, content, accessCode, contentItem }) =
     const fetchTeams = useCallback(async () => {
         try {
             const response = await axios.get(
-                `http://localhost:8080/api/sessions/${accessCode}/teams`,
+                `${API_BASE_URL}api/sessions${accessCode}/teams`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             const teamsData = response.data && response.data.teams ? response.data.teams :
@@ -83,7 +84,7 @@ const TeamChallengeActivity = ({ activity, content, accessCode, contentItem }) =
     const fetchChallengeStatus = useCallback(async () => {
         try {
             const response = await axios.get(
-                `http://localhost:8080/api/sessions/${accessCode}/teamchallenge/status`,
+                `${API_BASE_URL}api/sessions${accessCode}/teamchallenge/status`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
@@ -165,7 +166,7 @@ const TeamChallengeActivity = ({ activity, content, accessCode, contentItem }) =
             if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
             saveTimeoutRef.current = setTimeout(() => {
                 axios.post(
-                    `http://localhost:8080/api/sessions/${accessCode}/teamchallenge/save-drawing`,
+                    `${API_BASE_URL}api/sessions/${accessCode}/teamchallenge/save-drawing`,
                     {
                         teamId: userTeam.teamId,
                         paths: updatedPaths
@@ -180,7 +181,7 @@ const TeamChallengeActivity = ({ activity, content, accessCode, contentItem }) =
         if (userTeam?.teamId) {
             console.log(`Requesting initial canvas data as ${userRole}`);
             axios.get(
-                `http://localhost:8080/api/sessions/${accessCode}/teamchallenge/drawing/${userTeam.teamId}`,
+                `${API_BASE_URL}api/sessions/${accessCode}/teamchallenge/drawing/${userTeam.teamId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             )
                 .then(response => {
@@ -214,7 +215,7 @@ const TeamChallengeActivity = ({ activity, content, accessCode, contentItem }) =
                 while (retryCount < 3 && !teamsCreated) {
                     try {
                         await axios.post(
-                            `http://localhost:8080/api/sessions/${accessCode}/teams?autoAssign=true`,
+                            `${API_BASE_URL}api/sessions/${accessCode}/teams?autoAssign=true`,
                             {},
                             { headers: { Authorization: `Bearer ${token}` } }
                         );
@@ -262,7 +263,7 @@ const TeamChallengeActivity = ({ activity, content, accessCode, contentItem }) =
                         });
                     }
                     axios.post(
-                        `http://localhost:8080/api/sessions/${accessCode}/teamchallenge/save-drawing`,
+                        `${API_BASE_URL}api/sessions/${accessCode}/teamchallenge/save-drawing`,
                         {
                             teamId: userTeam.teamId,
                             paths: []
@@ -285,7 +286,7 @@ const TeamChallengeActivity = ({ activity, content, accessCode, contentItem }) =
                 });
             }
             axios.post(
-                `http://localhost:8080/api/sessions/${accessCode}/teamchallenge/save-drawing`,
+                `${API_BASE_URL}api/sessions/${accessCode}/teamchallenge/save-drawing`,
                 {
                     teamId: userTeam.teamId,
                     paths: []
@@ -307,7 +308,7 @@ const TeamChallengeActivity = ({ activity, content, accessCode, contentItem }) =
 
             // Add explicit content type header
             await axios.post(
-                `http://localhost:8080/api/sessions/${accessCode}/teamchallenge/guess`,
+                `${API_BASE_URL}api/sessions/${accessCode}/teamchallenge/guess`,
                 guessData,
                 {
                     headers: {
@@ -339,7 +340,7 @@ const TeamChallengeActivity = ({ activity, content, accessCode, contentItem }) =
             const teamId = userTeam.id || userTeam.teamId;
 
             await axios.post(
-                `http://localhost:8080/api/sessions/${accessCode}/teamchallenge/switch-drawer`,
+                `${API_BASE_URL}api/sessions/${accessCode}/teamchallenge/switch-drawer`,
                 { teamId, newDrawerId },
                 {
                     headers: {
@@ -433,7 +434,7 @@ const TeamChallengeActivity = ({ activity, content, accessCode, contentItem }) =
             saveTimeoutRef.current = setTimeout(() => {
                 canvasRef.current.exportPaths().then(paths => {
                     axios.post(
-                        `http://localhost:8080/api/sessions/${accessCode}/teamchallenge/save-drawing`,
+                        `${API_BASE_URL}api/sessions/${accessCode}/teamchallenge/save-drawing`,
                         {
                             teamId: userTeam.teamId,
                             paths: paths
@@ -457,7 +458,7 @@ const TeamChallengeActivity = ({ activity, content, accessCode, contentItem }) =
 
     useEffect(() => {
         if (!userTeam?.teamId) return;
-        const socket = new SockJS('http://localhost:8080/ws-sessions');
+        const socket = new SockJS(`${API_BASE_URL}ws-sessions`);
         const client = new Client({
             webSocketFactory: () => socket,
             reconnectDelay: 5000,

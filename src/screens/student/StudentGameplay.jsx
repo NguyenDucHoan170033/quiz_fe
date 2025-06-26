@@ -5,6 +5,7 @@ import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import { useNavigate } from 'react-router-dom';
 import '../../style/gameplay.css';
+import API_BASE_URL from '../../config/api';
 
 
 import MultipleChoiceActivity from './activities/MultipleChoice';
@@ -89,7 +90,7 @@ const StudentGamePlay = () => {
         try {
             setLoading(true);
             const response = await axios.get(
-                `http://localhost:8080/api/sessions/${accessCode}/game`,
+                `${API_BASE_URL}api/sessions/${accessCode}/game`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -119,7 +120,7 @@ const StudentGamePlay = () => {
 
     const setupWebSocket = () => {
         const client = new Client({
-            webSocketFactory: () => new SockJS('http://localhost:8080/ws-sessions'),
+            webSocketFactory: () => new SockJS(`${API_BASE_URL}ws-sessions`),
             connectHeaders: { Authorization: `Bearer ${token}` },
             onConnect: () => {
                 console.log('WebSocket connected for game play');
@@ -461,7 +462,7 @@ const StudentGamePlay = () => {
         if (currentActivity.type === 'TEAM_CHALLENGE') {
             try {
                 await axios.post(
-                    `http://localhost:8080/api/sessions/${accessCode}/activity/${currentActivity.id}/advance-content`,
+                    `${API_BASE_URL}api/sessions/${accessCode}/activity/${currentActivity.id}/advance-content`,
                     { currentContentIndex },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
@@ -504,7 +505,7 @@ const StudentGamePlay = () => {
 
         try {
             const sessionResponse = await axios.get(
-                `http://localhost:8080/api/sessions/${accessCode}`,
+                `${API_BASE_URL}api/sessions/${accessCode}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
@@ -515,7 +516,7 @@ const StudentGamePlay = () => {
                 return;
             }
             await axios.post(
-                `http://localhost:8080/api/sessions/${accessCode}/activity/${freshActivityId}/advance-content`,
+                `${API_BASE_URL}api/sessions/${accessCode}/activity/${freshActivityId}/advance-content`,
                 { currentContentIndex },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -538,7 +539,7 @@ const StudentGamePlay = () => {
             const contentId = currentContentItem ? currentContentItem.contentId : "legacy";
 
             const response = await axios.post(
-                `http://localhost:8080/api/sessions/${accessCode}/submit`,
+                `${API_BASE_URL}api/sessions/${accessCode}/submit`,
                 {
                     activityId: currentActivity.id,
                     contentId: contentId,

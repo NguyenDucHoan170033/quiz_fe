@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "../../style/teacher-profile.css"
 import { FaCamera } from 'react-icons/fa';
+import API_BASE_URL from '../../config/api';
 
 const TeacherProfile = () => {
   const [profile, setProfile] = useState({
@@ -22,7 +23,7 @@ const TeacherProfile = () => {
   useEffect(() => {
       const fetchProfile = async () => {
           try {
-              const res = await axios.get("http://localhost:8080/api/user/profile", {
+              const res = await axios.get(`${API_BASE_URL}api/user/profile`, {
                   headers: {
                       Authorization: `Bearer ${token}`,
                   },
@@ -68,7 +69,7 @@ const TeacherProfile = () => {
 
           // Gọi API update avatar
           const response = await axios.post(
-              `http://localhost:8080/api/user/${profile.userId}/avatar`,
+              `${API_BASE_URL}api/user/${profile.userId}/avatar`,
               formData,
               {
                   headers: {

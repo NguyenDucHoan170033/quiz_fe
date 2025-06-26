@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import SockJS from 'sockjs-client';
+import API_BASE_URL from '../../config/api';
 
 const SimpleSocketTest = () => {
     const [status, setStatus] = useState('Not connected');
@@ -15,7 +16,7 @@ const SimpleSocketTest = () => {
         setStatus('Connecting...');
 
         // First test if basic SockJS info endpoint works
-        fetch('http://localhost:8080/ws-sessions/info')
+        fetch(`${API_BASE_URL}ws-sessions/info`)
             .then(res => res.json())
             .then(data => {
                 addLog(`Info endpoint success: ${JSON.stringify(data)}`);
@@ -23,7 +24,7 @@ const SimpleSocketTest = () => {
                 const token = localStorage.getItem('token');
 
                 // Create SockJS with headers
-                const sock = new SockJS('http://localhost:8080/ws-sessions', null, {
+                const sock = new SockJS(`${API_BASE_URL}ws-sessions`, null, {
                     transports: 'websocket',
                     headers: {
                         Authorization: `Bearer ${token}` // Add JWT to headers

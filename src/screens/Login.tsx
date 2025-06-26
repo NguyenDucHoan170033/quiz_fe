@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import API_BASE_URL from '../config/api';
 
 function Login() {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ function Login() {
     try {
       const response = await axios({
         method: 'post',
-        url: 'http://localhost:8080/api/auth/login',
+        url: `${API_BASE_URL}api/auth/login`,
         data: {
           email: email,
           password: password

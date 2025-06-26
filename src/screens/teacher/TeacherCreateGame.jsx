@@ -24,6 +24,7 @@ import {
 import Sidebar from "../../layout/teacher/teacherSidebar"
 import Header from "../../layout/teacher/teacherHeader";
 import "../../style/teacher-create-game.css"
+import API_BASE_URL from '../../config/api';
 
 const TeacherCreateGame = () => {
   const { token } = useAuth()
@@ -90,7 +91,7 @@ const TeacherCreateGame = () => {
     const fetchGames = async () => {
       try {
         setLoading(true)
-        const response = await axios.get("http://localhost:8080/api/games/teacher", {
+        const response = await axios.get(`${API_BASE_URL}api/games/teacher`, {
           headers: {
             Authorization: `Bearer ${token}`
           },
@@ -159,7 +160,7 @@ const TeacherCreateGame = () => {
       }
 
       const response = await axios.post(
-        "http://localhost:8080/api/games",
+        `${API_BASE_URL}api/games`,
         newGame,
         {
           headers: {

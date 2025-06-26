@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../../context/AuthContext';
+import API_BASE_URL from '../../../config/api';
 // import '../../style/leaderboard.css'; // You'll need to create this CSS file
 
 const GameCompletedLeaderboard = () => {
@@ -32,7 +33,7 @@ const GameCompletedLeaderboard = () => {
       setLoading(true);
       // Fetch final leaderboard data
       const leaderboardResponse = await axios.get(
-        `http://localhost:8080/api/sessions/${accessCode}/leaderboard`,
+        `${API_BASE_URL}api/sessions/${accessCode}/leaderboard`,
         {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -42,7 +43,7 @@ const GameCompletedLeaderboard = () => {
       
       // Fetch session details (game title, etc)
       const sessionResponse = await axios.get(
-        `http://localhost:8080/api/sessions/${accessCode}/details`,
+        `${API_BASE_URL}api/sessions/${accessCode}/details`,
         {
           headers: {
             'Authorization': `Bearer ${token}`

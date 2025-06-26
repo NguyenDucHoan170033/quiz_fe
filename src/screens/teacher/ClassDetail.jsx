@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
+import API_BASE_URL from '../../config/api';
 import {
     BookOpen,
     Users,
@@ -48,7 +49,7 @@ const ClassDetail = () => {
         const fetchClassDetails = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(`http://localhost:8080/api/classes/${classId}`, {
+                const response = await axios.get(`${API_BASE_URL}api/classes/${classId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -62,7 +63,7 @@ const ClassDetail = () => {
                         response.data.studentIds.map(async (studentId) => {
                             try {
                                 // Use the correct endpoint to fetch user data
-                                const studentResponse = await axios.get(`http://localhost:8080/api/classes/user/${studentId}`, {
+                                const studentResponse = await axios.get(`${API_BASE_URL}api/classes/user/${studentId}`, {
                                     headers: {
                                         Authorization: `Bearer ${token}`,
                                     },
@@ -117,7 +118,7 @@ const ClassDetail = () => {
                 throw new Error("Could not determine teacher ID from token");
             }
 
-            const response = await axios.get('http://localhost:8080/api/games/teacher', {
+            const response = await axios.get(`${API_BASE_URL}api/games/teacher`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'X-Teacher-Id': teacherId
@@ -146,7 +147,7 @@ const ClassDetail = () => {
     const generateNewCode = async () => {
         try {
             const response = await axios.post(
-                `http://localhost:8080/api/classes/${classId}/generate-code`,
+                `${API_BASE_URL}api/classes/${classId}/generate-code`,
                 {},
                 {
                     headers: {
@@ -187,7 +188,7 @@ const ClassDetail = () => {
 
         try {
             const response = await axios.post(
-                `http://localhost:8080/api/classes/${classId}/generate-code`,
+                `${API_BASE_URL}api/classes/${classId}/generate-code`,
                 {},
                 {
                     headers: {
@@ -207,7 +208,7 @@ const ClassDetail = () => {
     const removeStudent = async (studentId) => {
         try {
             await axios.delete(
-                `http://localhost:8080/api/classes/${classId}/students/${studentId}`,
+                `${API_BASE_URL}api/classes/${classId}/students/${studentId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -244,7 +245,7 @@ const ClassDetail = () => {
         setLoading(true);
         try {
         const sessionRes = await axios.post(
-            `http://localhost:8080/api/classes/${classId}/game-session`,
+            `${API_BASE_URL}api/classes/${classId}/game-session`,
             {},
             {
             headers: {
@@ -259,7 +260,7 @@ const ClassDetail = () => {
             sessions.map(async (session) => {
             try {
                 const gameRes = await axios.get(
-                `http://localhost:8080/api/games/${session.gameId}`,
+                `${API_BASE_URL}api/games/${session.gameId}`,
                 {
                     headers: {
                     Authorization: `Bearer ${token}`,
@@ -302,7 +303,7 @@ const ClassDetail = () => {
         try {
             // Gọi API lịch sử lớp
             const historyRes = await axios.get(
-            `http://localhost:8080/api/classes/class-game-history/${session.id}`,
+            `${API_BASE_URL}api/classes/class-game-history/${session.id}`,
             {
                 headers: { Authorization: `Bearer ${token}` },
             }
@@ -311,7 +312,7 @@ const ClassDetail = () => {
 
             // Gọi API tiến độ môn học
             const progressRes = await axios.get(
-            `http://localhost:8080/api/classes/subject-progress/${session.id}`,
+            `${API_BASE_URL}api/classes/subject-progress/${session.id}`,
             {
                 headers: { Authorization: `Bearer ${token}` },
             }
