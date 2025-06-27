@@ -28,7 +28,7 @@ const ForgotPass = () => {
     }
 
     try {
-      const response = await axios.post('${API_BASE_URL}api/auth/forgot-password', {
+      const response = await axios.post(`${API_BASE_URL}api/auth/forgot-password`, {
         email: email,
         newPassword: newPassword
       });
