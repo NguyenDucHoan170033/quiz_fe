@@ -102,22 +102,33 @@ const Checkotp = () => {
                       value={otp[index] || ''}
                       onChange={(e) => {
                         const value = e.target.value.replace(/[^0-9]/g, '');
+                        const newOtp = otp.split('');
                         if (value) {
-                          const newOtp = otp.split('');
                           newOtp[index] = value;
                           setOtp(newOtp.join(''));
                           // Auto-focus next input
-                          if (index < 5 && value) {
+                          if (index < 5) {
                             const nextInput = document.querySelector(`input[name=otp-${index + 1}]`) as HTMLInputElement;
                             if (nextInput) nextInput.focus();
                           }
+                        } else {
+                          // Nếu xóa thì set rỗng cho ô hiện tại
+                          newOtp[index] = '';
+                          setOtp(newOtp.join(''));
                         }
                       }}
                       onKeyDown={(e) => {
-                        // Handle backspace to go to previous input
-                        if (e.key === 'Backspace' && !otp[index] && index > 0) {
-                          const prevInput = document.querySelector(`input[name=otp-${index - 1}]`) as HTMLInputElement;
-                          if (prevInput) prevInput.focus();
+                        if (e.key === 'Backspace') {
+                          if (otp[index]) {
+                            // Nếu ô hiện tại có số, xóa số đó
+                            const newOtp = otp.split('');
+                            newOtp[index] = '';
+                            setOtp(newOtp.join(''));
+                          } else if (index > 0) {
+                            // Nếu ô hiện tại rỗng, focus về ô trước
+                            const prevInput = document.querySelector(`input[name=otp-${index - 1}]`) as HTMLInputElement;
+                            if (prevInput) prevInput.focus();
+                          }
                         }
                       }}
                       name={`otp-${index}`}
