@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Clock, BookOpen, Target, Award, Trophy } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../../config/api';
 
 
 interface GameSession {
@@ -64,7 +65,7 @@ interface StudentProgress {
   displayName?: string;
 }
 
-const API_BASE_URL = 'http://localhost:8080/api/student-progress';
+const STUDENT_PROGRESS_API_URL = `${API_BASE_URL}api/student-progress`;
 
 // Add axios interceptor for authentication
 axios.interceptors.request.use(
@@ -126,14 +127,14 @@ const ProfileStudent: React.FC = () => {
 
         // First update the progress
         await axios.post(
-          `${API_BASE_URL}/${studentEmail}/update`,
+          `${STUDENT_PROGRESS_API_URL}/${studentEmail}/update`,
           {},
           { withCredentials: true }
         );
 
         // Then get the updated progress
         const response = await axios.get(
-          `${API_BASE_URL}/${studentEmail}`,
+          `${STUDENT_PROGRESS_API_URL}/${studentEmail}`,
           { withCredentials: true }
         );
 
