@@ -40,6 +40,23 @@ const Checkotp = () => {
       setIsLoading(false);
     }
   };
+
+  const handleResendCode = async () => {
+    setIsLoading(true);
+    setMessage("");
+    try {
+      await axios.post(`${API_BASE_URL}api/auth/send-otp`, {
+        email: location.state?.email,
+        isPasswordReset: location.state?.isPasswordReset || false
+      });
+      setMessage("A new OTP code has been sent to your email.");
+    } catch (error: any) {
+      setMessage(error.response?.data || "Failed to resend OTP code");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="!min-h-screen !w-full !bg-gradient-to-br !from-blue-50 !to-indigo-100 !flex !items-center !justify-center !p-4">
       <div className="!max-w-md !w-full !bg-white !rounded-2xl !shadow-xl !border-0 !overflow-hidden">
@@ -136,6 +153,17 @@ const Checkotp = () => {
               </button>
             </div>
           </form>
+
+          <div className="!mt-4 !text-center">
+            <button
+              type="button"
+              onClick={handleResendCode}
+              disabled={isLoading}
+              className="!text-blue-600 !font-semibold !hover:underline !disabled:opacity-50"
+            >
+              Resend Code
+            </button>
+          </div>
 
           {message && (
             <div className="!mt-6">
