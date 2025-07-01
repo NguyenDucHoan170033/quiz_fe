@@ -20,9 +20,7 @@ body {
     padding: 24px;
     border-radius: 16px;
     width: 100%;
-    max-width: 900px;
     gap: 400px;
-    margin-bottom: 30px;
   }
   
   .class-info {
@@ -884,4 +882,22 @@ body {
   text-align: center;
   padding: 2rem;
   color: #64748b;
+}
+
+.start-game-btn {
+  background: linear-gradient(90deg, var(--primary-color), var(--text-main));
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  transition: opacity 0.2s, filter 0.2s;
+}
+.start-game-btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+  opacity: 0.95;
+}
+.start-game-btn:disabled, .start-game-btn.disabled {
+  background: #e5e7eb !important;
+  color: #a1a1aa !important;
+  cursor: not-allowed;
+  opacity: 0.7;
 }

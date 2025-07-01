@@ -475,7 +475,7 @@ const ClassDetail = () => {
                                             </div>
                                             <button
                                                 onClick={generateNewCode}
-                                                className="text-xs bg-white/10 hover:bg-white/20 rounded-md px-2 py-1 flex items-center"
+                                                className="text-xs text-black border border-gray-300 bg-white/10 hover:bg-white/20 rounded-md px-2 py-1 flex items-center"
                                             >
                                                 <RefreshCw className="h-3 w-3 mr-1" />
                                                 New Code
@@ -485,7 +485,7 @@ const ClassDetail = () => {
                                 </div>
 
                                 {/* Right: Tutor Info */}
-                                <div className="tutor-section">
+                                {/* <div className="tutor-section">
                                     <div className="tutor-header">
                                         <h3 className="tutor-title">Tutors</h3>
                                         <span className="status-badge">In Progress</span>
@@ -499,9 +499,9 @@ const ClassDetail = () => {
                                             </div>
                                         </div>
                                         <div className="tutor-indicator" />
-                                    </div>
+                                    </div> */}
                                     {/* Members */}
-                                    <div className="members-section">
+                                    {/* <div className="members-section">
                                         <span className="text-sm font-medium">Members</span>
                                         <button className="invite-btn">Invite</button>
                                         <div className="avatar-group">
@@ -520,7 +520,7 @@ const ClassDetail = () => {
                                             )}
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>
@@ -792,10 +792,7 @@ const ClassDetail = () => {
                                             <button
                                                 onClick={createGameSession}
                                                 disabled={!selectedGame || gameLoading}
-                                                className={`flex items-center justify-center px-4 py-2 rounded-md text-white ${!selectedGame || gameLoading
-                                                        ? 'bg-gray-300 cursor-not-allowed'
-                                                        : 'bg-blue-600 hover:bg-blue-700'
-                                                    } transition-colors w-full`}
+                                                className={`start-game-btn flex items-center justify-center px-4 py-2 rounded-md w-full transition-colors ${!selectedGame || gameLoading ? 'disabled' : ''}`}
                                             >
                                                 {gameLoading ? (
                                                     <>
