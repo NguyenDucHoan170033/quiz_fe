@@ -48,13 +48,11 @@ const Checkotp = () => {
         <img 
           src='/large-triangles.svg' 
           alt="Background" 
-          className="!w-full !h-full !object-cover"
-          // style={{
-          //   transform: 'scale(1.1) translateX(-1%)',
-          //   transformOrigin: 'center',
-          //   maxWidth: '100%',
-          //   maxHeight: '100%'
-          // }}
+          className="!w-full !h-full !object-cover !absolute !inset-0"
+          style={{
+            transform: 'scale(1.1) translateX(-1%)',
+            transformOrigin: 'center'
+          }}
         />
         <div className="!absolute !inset-0 !bg-black/10"></div>
       </div>
