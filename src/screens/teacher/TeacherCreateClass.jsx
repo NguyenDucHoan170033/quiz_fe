@@ -362,6 +362,9 @@ const TeacherCreateClass = () => {
                 <div className="modal-container !bg-white !rounded-2xl !shadow-2xl !w-full !max-w-md !mx-auto !overflow-hidden animate-scale-in">
                   <div className="modal-header !bg-gradient-to-r !from-emerald-500 !to-teal-500 !px-6 !py-4 !flex !justify-between !items-center">
                     <div className="modal-title-container !flex !items-center !gap-3">
+                      <div className="!w-8 !h-8 !bg-white !bg-opacity-20 !rounded-full !flex !items-center !justify-center">
+                        <Plus className="modal-title-icon !w-5 !h-5 !text-white" />
+                      </div>
                       <h2 className="modal-title !text-xl !font-bold !text-white">Create New Class</h2>
                     </div>
                     <button 
@@ -455,7 +458,7 @@ const TeacherCreateClass = () => {
                       <button
                         type="button"
                         onClick={() => setIsModalOpen(false)}
-                        className="modal-cancel-button !px-4 !py-2 !bg-gray-300 !text-gray-800 !rounded-lg !text-sm !font-medium !hover:bg-gray-200 !transition-colors"
+                        className="modal-cancel-button !px-4 !py-2 !bg-gray-100 !text-gray-700 !rounded-lg !text-sm !font-medium !hover:bg-gray-200 !transition-colors"
                       >
                         Cancel
                       </button>
@@ -491,6 +494,9 @@ const TeacherCreateClass = () => {
                         ) : (
                           <>
                             <span>Create Class</span>
+                            <span className="!w-5 !h-5 !bg-white !bg-opacity-20 !rounded-full !flex !items-center !justify-center">
+                              <ChevronRight className="!w-3 !h-3" />
+                            </span>
                           </>
                         )}
                       </button>
