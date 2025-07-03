@@ -44,16 +44,50 @@ const Checkotp = () => {
   const handleResendCode = async () => {
     setIsLoading(true);
     setMessage("");
-    try {
-      await axios.post(`${API_BASE_URL}api/auth/send-otp`, {
-        email: location.state?.email,
-        isPasswordReset: location.state?.isPasswordReset || false
-      });
-      setMessage("A new OTP code has been sent to your email.");
-    } catch (error: any) {
-      setMessage(error.response?.data || "Failed to resend OTP code");
-    } finally {
-      setIsLoading(false);
+    const isPasswordReset = location.state?.isPasswordReset || false;
+
+    if (isPasswordReset) {
+      // Forgot password flow
+      const email = location.state?.email;
+      const newPassword = location.state?.newPassword;
+      if (!email || !newPassword) {
+        setMessage("Missing email or new password. Please go back and try again.");
+        setIsLoading(false);
+        return;
+      }
+      try {
+        await axios.post(`${API_BASE_URL}api/auth/forgot-password`, {
+          email,
+          newPassword
+        });
+        setMessage("A new OTP code has been sent to your email.");
+      } catch (error: any) {
+        setMessage(error.response?.data || "Failed to resend OTP code");
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      // Registration flow
+      const { email, username, displayName, password, role } = location.state || {};
+      if (!email || !username || !displayName || !password || !role) {
+        setMessage("Missing registration information. Please go back and try again.");
+        setIsLoading(false);
+        return;
+      }
+      try {
+        await axios.post(`${API_BASE_URL}api/auth/register`, {
+          email,
+          username,
+          displayName,
+          password,
+          role
+        });
+        setMessage("A new OTP code has been sent to your email.");
+      } catch (error: any) {
+        setMessage(error.response?.data || "Failed to resend OTP code");
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -169,22 +203,22 @@ const Checkotp = () => {
             <div className="!mt-6">
               <div
                 className={`!p-4 !rounded-xl !border-l-4 ${
-                  message.includes("successful")
-                    ? "!bg-green-50 !border-l-green-400 !border-green-100"
-                    : "!bg-red-50 !border-l-red-400 !border-red-100"
+                  /success|sent/i.test(message)
+                    ? '!bg-green-50 !border-l-green-400 !border-green-100'
+                    : '!bg-red-50 !border-l-red-400 !border-red-100'
                 }`}
               >
                 <div className="!flex !items-center">
                   <div
                     className={`!flex-shrink-0 !w-6 !h-6 !rounded-full !flex !items-center !justify-center !text-sm !font-bold ${
-                      message.includes("successful") ? "!bg-green-100 !text-green-600" : "!bg-red-100 !text-red-600"
+                      /success|sent/i.test(message) ? '!bg-green-100 !text-green-600' : '!bg-red-100 !text-red-600'
                     }`}
                   >
-                    {message.includes("successful") ? "✓" : "✗"}
+                    {/success|sent/i.test(message) ? '✓' : '✗'}
                   </div>
                   <p
                     className={`!ml-3 !text-base !font-medium ${
-                      message.includes("successful") ? "!text-green-800" : "!text-red-800"
+                      /success|sent/i.test(message) ? '!text-green-800' : '!text-red-800'
                     }`}
                   >
                     {message}

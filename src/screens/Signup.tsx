@@ -191,7 +191,13 @@ const Signup = () => {
       const response = await axios.post(`${API_BASE_URL}api/auth/register`, formData);
       if (response.status === 200) {
         setMessage('OTP code has been sent to your email. Please check your email.');
-        navigate('/checkotp', { state: { email: formData.email } });
+       navigate('/checkotp', { state: {
+          email: formData.email,
+          username: formData.username,
+          displayName: formData.displayName,
+          password: formData.password,
+          role: formData.role
+        } });
       }
     } catch (error: any) {
       if (error.response) {
