@@ -86,147 +86,131 @@ const StudentJoinClass = () => {
     };
 
     return (
-        <div className="student-page">
-            <div className="container">
-                {/* Decorative elements */}
-                <div className="decorative-circle top-right purple"></div>
-                <div className="decorative-circle bottom-left purple"></div>
+        <div className="!min-h-screen !w-full !bg-gradient-to-br !from-purple-100 !to-indigo-200 !flex !items-center !justify-center !py-8 !px-2">
+            <div className="!w-full !max-w-5xl !mx-auto !bg-white !rounded-3xl !shadow-2xl !p-8 !flex !flex-row !gap-8 !relative">
+                {/* Decorative circles */}
+                <div className="!absolute !top-0 !right-0 !w-32 !h-32 !bg-purple-200 !rounded-full !z-0 !blur-2xl"></div>
+                <div className="!absolute !bottom-0 !left-0 !w-40 !h-40 !bg-purple-100 !rounded-full !z-0 !blur-2xl"></div>
 
-                <div className="content-wrapper">
+                {/* Join Class Form - Left */}
+                <div className="!flex-1 !flex !flex-col !bg-white !rounded-2xl !shadow-lg !p-8 !gap-6 !border-2 !border-purple-200">
                     <div className="page-header">
-                        <div className="icon-container purple">
-                            <i className="icon book-open"></i>
+                        <div className="!icon-container !purple">
+                            <i className="!icon book-open"></i>
                         </div>
                         <div className="header-text">
                             <h1 className="page-title gradient-text-purple">Join a Class</h1>
                             <p className="subtitle">Enter a class code or view your enrolled classes</p>
                         </div>
                     </div>
-
                     {error && (
                         <div className="alert error fade-in">
                             <i className="icon alert-circle"></i>
                             <p>{error}</p>
                         </div>
                     )}
-
                     {successMessage && (
                         <div className="alert success purple fade-in">
                             <i className="icon sparkles"></i>
                             <p>{successMessage}</p>
                         </div>
                     )}
+                    <form onSubmit={handleSubmit} className="form">
+                        <div className="form-group">
+                            <label className="!block !text-base !font-semibold !text-gray-700 !mb-2" htmlFor="classCode">
+                                Class Code*
+                            </label>
+                            <div className="input-wrapper code-input-wrapper">
+                                <input
+                                    type="text"
+                                    id="classCode"
+                                    className="!w-full !p-3 !border !rounded-lg !text-gray-900 !bg-white"
+                                    value={classCode}
+                                    onChange={(e) => setClassCode(e.target.value.toUpperCase())}
+                                    placeholder="Enter the 6-character code provided by your teacher"
+                                    maxLength={6}
+                                    required
+                                />
+                                <div className="input-glow purple"></div>
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <button
+                                type="submit"
+                                className="button primary purple full-width"
+                                disabled={isSubmitting}
+                            >
+                                {isSubmitting ? (
+                                    <>
+                                        <span className="spinner purple"></span>
+                                        Joining...
+                                    </>
+                                ) : (
+                                    <>
+                                        <i className="icon log-in"></i>
+                                        Join Class
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    </form>
+                </div>
 
-                    <div className="two-column-grid">
-                        {/* Join Class Form */}
-                        <div className="card hover-shadow purple-border">
-                            <div className="card-header">
-                                <div className="icon-container small purple">
+                {/* Enrolled Classes List - Right */}
+                <div className="!flex-1 !flex !flex-col !bg-white !rounded-2xl !shadow-lg !p-8 !gap-6 !border-2 !border-purple-200">
+                    <div className="card-header">
+                        <div className="!icon-container !small !purple">
+                            <i className="!icon !book-!open"></i>
+                        </div>
+                        <h2 className="card-title gradient-text-purple">Your Enrolled Classes</h2>
+                    </div>
+                    {loading ? (
+                        <div className="loading-container">
+                            <div className="spinner-container purple">
+                                <div className="spinner-outer"></div>
+                                <div className="spinner-inner"></div>
+                            </div>
+                        </div>
+                    ) : enrolledClasses.length === 0 ? (
+                        <div className="empty-state">
+                            <div className="empty-icon-container">
+                               
+                                <div className="!empty-icon-badge">
                                     <i className="icon log-in"></i>
                                 </div>
-                                <h2 className="card-title gradient-text-purple">Enter Class Code</h2>
                             </div>
-
-                            <form onSubmit={handleSubmit} className="form">
-                                <div className="form-group">
-                                    <label className="form-label" htmlFor="classCode">
-                                        Class Code*
-                                    </label>
-                                    <div className="input-wrapper code-input-wrapper">
-                                        <input
-                                            type="text"
-                                            id="classCode"
-                                            className="form-input code-input"
-                                            value={classCode}
-                                            onChange={(e) => setClassCode(e.target.value.toUpperCase())}
-                                            placeholder="Enter the 6-character code provided by your teacher"
-                                            maxLength={6}
-                                            required
-                                        />
-                                        <div className="input-glow purple"></div>
-                                    </div>
-                                </div>
-
-                                <div className="form-group">
-                                    <button
-                                        type="submit"
-                                        className="button primary purple full-width"
-                                        disabled={isSubmitting}
-                                    >
-                                        {isSubmitting ? (
-                                            <>
-                                                <span className="spinner purple"></span>
-                                                Joining...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <i className="icon log-in"></i>
-                                                Join Class
-                                            </>
-                                        )}
-                                    </button>
-                                </div>
-                            </form>
+                            <p className="empty-title">You're not enrolled in any classes yet.</p>
+                            <p className="empty-subtitle">Enter a class code to join your first class</p>
                         </div>
+                    ) : (
+                        <div className="class-list">
+                            {enrolledClasses.map((cls, index) => (
+                                <div
+                                    key={cls.id}
+                                    className={`class-card ${getRandomColorClass(index)}`}
+                                >
+                                    {/* Pattern overlay */}
+                                    <div className="pattern-overlay"></div>
 
-                        {/* Enrolled Classes List */}
-                        <div className="card hover-shadow purple-border">
-                            <div className="card-header">
-                                <div className="icon-container small purple">
-                                    <i className="icon book-open"></i>
-                                </div>
-                                <h2 className="card-title gradient-text-purple">Your Enrolled Classes</h2>
-                            </div>
-
-                            {loading ? (
-                                <div className="loading-container">
-                                    <div className="spinner-container purple">
-                                        <div className="spinner-outer"></div>
-                                        <div className="spinner-inner"></div>
-                                    </div>
-                                </div>
-                            ) : enrolledClasses.length === 0 ? (
-                                <div className="empty-state">
-                                    <div className="empty-icon-container">
-                                        <i className="icon book-open empty-icon"></i>
-                                        <div className="empty-icon-badge">
-                                            <i className="icon log-in"></i>
-                                        </div>
-                                    </div>
-                                    <p className="empty-title">You're not enrolled in any classes yet.</p>
-                                    <p className="empty-subtitle">Enter a class code to join your first class</p>
-                                </div>
-                            ) : (
-                                <div className="class-list">
-                                    {enrolledClasses.map((cls, index) => (
-                                        <div
-                                            key={cls.id}
-                                            className={`class-card ${getRandomColorClass(index)}`}
-                                        >
-                                            {/* Pattern overlay */}
-                                            <div className="pattern-overlay"></div>
-
-                                            <div className="class-card-content">
-                                                <div className="class-card-header">
-                                                    <div>
-                                                        <h3 className="class-name">{cls.name}</h3>
-                                                        {cls.description && <p className="class-description">{cls.description}</p>}
-                                                    </div>
-                                                    <button
-                                                        onClick={() => viewClassDetails(cls.id)}
-                                                        className="button small light"
-                                                    >
-                                                        View Class
-                                                        <i className="icon chevron-right"></i>
-                                                    </button>
-                                                </div>
+                                    <div className="class-card-content">
+                                        <div className="class-card-header">
+                                            <div>
+                                                <h3 className="class-name">{cls.name}</h3>
+                                                {cls.description && <p className="class-description">{cls.description}</p>}
                                             </div>
+                                            <button
+                                                onClick={() => viewClassDetails(cls.id)}
+                                                className="button small light"
+                                            >
+                                                View Class
+                                                <i className="icon chevron-right"></i>
+                                            </button>
                                         </div>
-                                    ))}
+                                    </div>
                                 </div>
-                            )}
+                            ))}
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>
