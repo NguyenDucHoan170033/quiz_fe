@@ -79,90 +79,24 @@ const FillInBlankGame = ({
                 ? (questionObj.alternatives?.[blankIndex] || questionObj.blanks?.[blankIndex]?.alternatives || [])
                 : blanks[blankIndex]?.alternatives || [];
             
-            const answerData = isMultiQuestion
-                ? {
-                    questionIndex: currentQuestionIndex,
-                    blankIndex: blankIndex,
-                    answer: currentAnswer.trim(),
-                    acceptableAnswers: {
-                        [currentQuestionIndex]: {
-                            [blankIndex]: [correctAnswer, ...alternatives].filter(Boolean)
-                        }
-                    }
-                }
-                : {
-                    blankIndex: blankIndex,
-                    answer: currentAnswer.trim(),
-                    acceptableAnswers: [correctAnswer, ...alternatives].filter(Boolean)
-                };
+            const answerData = {
+                questionIndex: isMultiQuestion ? currentQuestionIndex : 0,
+                blankIndex: blankIndex,
+                answer: currentAnswer.trim(),
+                acceptableAnswers: isMultiQuestion
+                    ? { [currentQuestionIndex]: { [blankIndex]: [correctAnswer, ...alternatives] } }
+                    : [correctAnswer, ...alternatives]  // Flat list for single question
+            };
 
+            await submitAnswer(answerData);
             setAnswered(true);
-            await submitAnswer?.(answerData);
-            
-            const newAnswers = [...userAnswers];
-            newAnswers[blankIndex] = currentAnswer.trim();
-            setUserAnswers(newAnswers);
-            
-            const normalizedUserAnswer = currentAnswer.trim().toLowerCase();
-            const normalizedCorrectAnswer = correctAnswer.toLowerCase();
-            const normalizedAlternatives = alternatives.map(alt => alt.toLowerCase());
-            
-            const isCorrect = normalizedUserAnswer === normalizedCorrectAnswer;
-            const isAlternative = normalizedAlternatives.some(alt => alt === normalizedUserAnswer);
-            
-            if (isCorrect) {
-                setFeedback(prev => ({
-                    ...prev,
-                    [blankIndex]: { correct: true }
-                }));
-            } else if (isAlternative) {
-                setFeedback(prev => ({
-                    ...prev,
-                    [blankIndex]: {
-                        correct: true,
-                        isAlternative: true,
-                        correctAnswer: correctAnswer
-                    }
-                }));
-            } else {
-                setFeedback(prev => ({
-                    ...prev,
-                    [blankIndex]: {
-                        correct: false,
-                        correctAnswer: correctAnswer
-                    }
-                }));
-            }
-            
+            setFeedback({
+                correct: true,
+                correctAnswer: correctAnswer,
+                isAlternative: alternatives.length > 1
+            });
             setCurrentAnswer("");
             setActiveBlankIndex(null);
-            
-            const blankCount = getBlankCount(questionText);
-            const filledBlanks = newAnswers.filter(answer => answer.trim() !== "").length;
-
-            if (filledBlanks === blankCount) {
-                setTimeout(async () => {
-                    if (isMultiQuestion && currentQuestionIndex < content.questions.length - 1) {
-                        setCurrentQuestionIndex(prev => prev + 1);
-                    } else {
-                        await submitAnswer?.({
-                            completed: true,
-                            questionIndex: currentQuestionIndex,
-                            allAnswers: newAnswers
-                        });
-                        if (typeof onComplete === 'function') onComplete();
-                    }
-                }, 1500);
-            } else {
-                setTimeout(() => {
-                    setFeedback(prev => {
-                        const newFeedback = { ...prev };
-                        delete newFeedback[blankIndex];
-                        return newFeedback;
-                    });
-                    setAnswered(false);
-                }, 1500);
-            }
         } catch (error) {
             console.error('Error submitting answer:', error);
             setAnswered(false);
@@ -302,5 +236,5 @@ const FillInBlankGame = ({
         </div>
     );
 };
-
+    
 export default FillInBlankGame;
