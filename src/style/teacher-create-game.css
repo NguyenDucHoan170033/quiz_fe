@@ -344,6 +344,7 @@
   
   /* Modal Header */
   .modal-header {
+    background: linear-gradient(90deg, var(--primary-color), var(--text-main)) !important;
     display: flex;
     justify-content: space-between;
     align-items: center;

@@ -371,7 +371,7 @@ const TeacherCreateGame = () => {
             <div className="modal-header">
               <div className="modal-title-container">
                 <Gamepad className="modal-title-icon" />
-                <h2 className="modal-title">Create New Game(TEST)</h2>
+                <h2 className="modal-title">Create New Game</h2>
               </div>
               <button
                 onClick={() => setIsModalOpen(false)}
