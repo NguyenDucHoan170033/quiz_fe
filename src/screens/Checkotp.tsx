@@ -49,10 +49,10 @@ const Checkotp = () => {
           src='/large-triangles.svg' 
           alt="Background" 
           className="!w-full !h-full !object-contain"
-          style={{
-            transform: 'scale(1.1) translateX(-1%)',
-            transformOrigin: 'center',
-          }}
+          // style={{
+          //   transform: 'scale(1.1) translateX(-1%)',
+          //   transformOrigin: 'center',
+          // }}
         />
         <div className="!absolute !inset-0 !bg-black/10"></div>
       </div>
