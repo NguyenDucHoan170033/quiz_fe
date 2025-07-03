@@ -17,7 +17,7 @@ const MatchingForm = ({
   addHint,
   removeHint,
 }) => {
-  const { token } = useAuth();
+  const token = localStorage.getItem('token');
 
   const addMatchPair = () => {
     setContentItems([
