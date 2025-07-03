@@ -8,6 +8,7 @@ const FillInBlankGame = ({
     submitAnswer, 
     onComplete = () => {} 
 }) => {
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [userAnswers, setUserAnswers] = useState([]);
     const [showFeedback, setShowFeedback] = useState(false);
     const [currentAnswer, setCurrentAnswer] = useState("");
@@ -16,18 +17,25 @@ const FillInBlankGame = ({
     const [feedback, setFeedback] = useState({});
     const inputRef = useRef(null);
 
-    const { questionText = "", blanks = [], hints = [], explanation = "" } = content || {};
+    const isMultiQuestion = Array.isArray(content?.questions);
+    const questionObj = isMultiQuestion ? content.questions[currentQuestionIndex] : content;
+    const { questionText = "", blanks = [], hints = [], explanation = "" } = isMultiQuestion
+        ? {
+            questionText: questionObj?.question || "",
+            blanks: questionObj?.blanks || [],
+            hints: questionObj?.hints || [],
+            explanation: questionObj?.explanation || ""
+        }
+        : content || {};
 
-    // Reset state when content changes
     useEffect(() => {
         setUserAnswers([]);
         setAnswered(false);
         setCurrentAnswer("");
         setActiveBlankIndex(null);
         setFeedback({});
-    }, [content]);
+    }, [currentQuestionIndex, content]);
 
-    // Initialize userAnswers when question changes
     useEffect(() => {
         if (questionText) {
             const blankCount = getBlankCount(questionText);
@@ -35,20 +43,17 @@ const FillInBlankGame = ({
         }
     }, [questionText]);
 
-    // Focus input when activeBlankIndex changes
     useEffect(() => {
         if (activeBlankIndex !== null && inputRef.current) {
             inputRef.current.focus();
         }
     }, [activeBlankIndex]);
 
-    // Get blank count from question text
     const getBlankCount = (questionText) => {
         const parts = questionText.split(/_+/g);
         return parts.length - 1;
     };
 
-    // Get word count for a specific blank
     const getWordCount = (questionText, blankIndex) => {
         const parts = questionText.split(/_+/g);
         if (blankIndex >= parts.length - 1) return 1;
@@ -63,39 +68,48 @@ const FillInBlankGame = ({
         return blankText.includes('__') ? "multiple" : 1;
     };
 
-    // Handle answer submission
     const handleAnswer = async (blankIndex) => {
         if (!currentAnswer.trim() || submitting || answered) return;
 
         try {
-            const correctAnswer = blanks[blankIndex]?.answer || "";
-            const alternatives = blanks[blankIndex]?.alternatives || [];
+            const correctAnswer = isMultiQuestion
+                ? (questionObj.answer?.[blankIndex] || questionObj.blanks?.[blankIndex]?.answer || "")
+                : blanks[blankIndex]?.answer || "";
+            const alternatives = isMultiQuestion
+                ? (questionObj.alternatives?.[blankIndex] || questionObj.blanks?.[blankIndex]?.alternatives || [])
+                : blanks[blankIndex]?.alternatives || [];
             
-            // Format the answer data
-            const answerData = {
-                blankIndex: blankIndex,
-                answer: currentAnswer.trim(),
-                acceptableAnswers: [correctAnswer, ...alternatives].filter(Boolean)
-            };
+            const answerData = isMultiQuestion
+                ? {
+                    questionIndex: currentQuestionIndex,
+                    blankIndex: blankIndex,
+                    answer: currentAnswer.trim(),
+                    acceptableAnswers: {
+                        [currentQuestionIndex]: {
+                            [blankIndex]: [correctAnswer, ...alternatives].filter(Boolean)
+                        }
+                    }
+                }
+                : {
+                    blankIndex: blankIndex,
+                    answer: currentAnswer.trim(),
+                    acceptableAnswers: [correctAnswer, ...alternatives].filter(Boolean)
+                };
 
             setAnswered(true);
-            const result = await submitAnswer(answerData);
+            await submitAnswer?.(answerData);
             
-            // Update user answers
             const newAnswers = [...userAnswers];
             newAnswers[blankIndex] = currentAnswer.trim();
             setUserAnswers(newAnswers);
             
-            // Normalize answers for comparison
             const normalizedUserAnswer = currentAnswer.trim().toLowerCase();
             const normalizedCorrectAnswer = correctAnswer.toLowerCase();
             const normalizedAlternatives = alternatives.map(alt => alt.toLowerCase());
             
-            // Check answer correctness
             const isCorrect = normalizedUserAnswer === normalizedCorrectAnswer;
             const isAlternative = normalizedAlternatives.some(alt => alt === normalizedUserAnswer);
             
-            // Set feedback
             if (isCorrect) {
                 setFeedback(prev => ({
                     ...prev,
@@ -120,17 +134,24 @@ const FillInBlankGame = ({
                 }));
             }
             
-            // Reset current answer
             setCurrentAnswer("");
             setActiveBlankIndex(null);
             
-            // Check if all blanks are filled
             const blankCount = getBlankCount(questionText);
             const filledBlanks = newAnswers.filter(answer => answer.trim() !== "").length;
 
             if (filledBlanks === blankCount) {
-                setTimeout(() => {
-                    onComplete();
+                setTimeout(async () => {
+                    if (isMultiQuestion && currentQuestionIndex < content.questions.length - 1) {
+                        setCurrentQuestionIndex(prev => prev + 1);
+                    } else {
+                        await submitAnswer?.({
+                            completed: true,
+                            questionIndex: currentQuestionIndex,
+                            allAnswers: newAnswers
+                        });
+                        if (typeof onComplete === 'function') onComplete();
+                    }
                 }, 1500);
             } else {
                 setTimeout(() => {
@@ -147,6 +168,14 @@ const FillInBlankGame = ({
             setAnswered(false);
         }
     };
+
+    if (isMultiQuestion && currentQuestionIndex >= content.questions.length) {
+        return (
+            <div className="!p-6 !space-y-6 !bg-white !rounded-lg !shadow-md">
+                <h2 className="!text-2xl !font-bold !text-center">Activity Complete!</h2>
+            </div>
+        );
+    }
 
     if (!questionText) {
         return (
@@ -201,7 +230,6 @@ const FillInBlankGame = ({
                     })}
                 </div>
 
-                {/* Display feedback below the question */}
                 <div className="!space-y-2">
                     {Object.entries(feedback).map(([blankIndex, fb]) => (
                         <div key={blankIndex} className={`!text-sm transition-opacity duration-300 ${fb.correct ? '!text-green-500' : '!text-red-500'}`}>
