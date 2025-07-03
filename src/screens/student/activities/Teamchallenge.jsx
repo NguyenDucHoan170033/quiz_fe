@@ -84,7 +84,7 @@ const TeamChallengeActivity = ({ activity, content, accessCode, contentItem }) =
     const fetchChallengeStatus = useCallback(async () => {
         try {
             const response = await axios.get(
-                `${API_BASE_URL}api/sessions${accessCode}/teamchallenge/status`,
+                `${API_BASE_URL}api/sessions/${accessCode}/teamchallenge/status`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
