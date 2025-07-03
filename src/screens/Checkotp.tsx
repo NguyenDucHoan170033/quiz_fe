@@ -188,16 +188,7 @@ const Checkotp = () => {
             </div>
           </form>
 
-          <div className="!mt-4 !text-center">
-            <button
-              type="button"
-              onClick={handleResendCode}
-              disabled={isLoading}
-              className="!text-blue-600 !font-semibold !hover:underline !disabled:opacity-50"
-            >
-              Resend Code
-            </button>
-          </div>
+       
 
           <div className="!mt-4 !text-center">
             <button
