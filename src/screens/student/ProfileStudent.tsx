@@ -73,8 +73,14 @@ axios.interceptors.request.use(
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      config.headers['Content-Type'] = 'application/json';
       config.headers['Accept'] = 'application/json';
+      // Chỉ set Content-Type nếu không phải FormData
+      if (
+        config.data &&
+        !(config.data instanceof FormData)
+      ) {
+        config.headers['Content-Type'] = 'application/json';
+      }
     }
     return config;
   },
