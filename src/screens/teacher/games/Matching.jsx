@@ -64,7 +64,7 @@ const MatchingForm = ({
 
     const formData = new FormData();
     formData.append("file", file);
-
+    console.log("token", token);
     try {
       const res = await axios.post(`${API_BASE_URL}api/upload/image`, formData, {
         headers: {
