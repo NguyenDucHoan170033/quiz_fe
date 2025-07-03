@@ -46,7 +46,7 @@ const Checkotp = () => {
       {/* Background image */}
       <div className="!absolute !inset-0 !bg-gray-200">
         <img 
-          src='/bg-otp2.jpeg' 
+          src='/large-triangles.svg' 
           alt="Background" 
           className="!w-full !h-full !object-contain"
           style={{

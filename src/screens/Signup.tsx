@@ -209,7 +209,7 @@ const Signup = () => {
       {/* Background image */}
       <div className="!absolute !inset-0 !bg-purple-900">
         <img 
-          src='/bg-login.jpg' 
+          src='/large-triangles.svg' 
           alt="Background" 
           className="!w-full !h-full !object-cover "
           style={{

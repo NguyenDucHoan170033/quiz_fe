@@ -87,7 +87,7 @@ function Login() {
       {/* Background image */}
       <div className="!absolute !inset-0 !bg-purple-900">
         <img 
-          src='/Background+Shadow4.svg' 
+          src='/large-triangles.svg' 
           alt="Background" 
           className="!w-full !h-full !object-cover "
         />
