@@ -597,11 +597,11 @@ const ClassDetail = () => {
                                         <h2 className="game-session-title">Game Sessions</h2>
 
                                         {loading ? (
-                                            <p className="game-session-loading">Đang tải dữ liệu...</p>
+                                            <p className="game-session-loading">Loading data...</p>
                                         ) : error ? (
                                             <p className="game-session-error">{error}</p>
                                         ) : paginatedSessions.length === 0 ? (
-                                            <p className="game-session-empty">Không có phiên nào.</p>
+                                            <p className="game-session-empty">No sessions available.</p>
                                         ) : (
                                             <div className="game-session-grid">
                                             {paginatedSessions.map((session, index) => (
@@ -682,23 +682,23 @@ const ClassDetail = () => {
                                                         {subjectProgress && (
                                                             <div className="subject-progress">
                                                             <h4 className="section-title">
-                                                                Tiến độ môn học
+                                                                Subject Progress
                                                             </h4>
                                                             
                                                             <div className="subject-progress__grid">
                                                                 <div>
-                                                                <p className="info-item"><span>Môn học:</span> {subjectProgress.subject}</p>
-                                                                <p className="info-item"><span>Điểm trung bình:</span> {subjectProgress.averageScore.toFixed(2)}</p>
+                                                                <p className="info-item"><span>Subject:</span> {subjectProgress.subject}</p>
+                                                                <p className="info-item"><span>Average score:</span> {subjectProgress.averageScore.toFixed(2)}</p>
                                                                 </div>
                                                                 <div>
-                                                                <p className="info-item"><span>Hoạt động hoàn thành:</span> {subjectProgress.totalActivitiesCompleted}</p>
-                                                                <p className="info-item"><span>Lần hoạt động cuối:</span> {formatDateTime(subjectProgress.lastActivity)}</p>
+                                                                <p className="info-item"><span>Activities completed:</span> {subjectProgress.totalActivitiesCompleted}</p>
+                                                                <p className="info-item"><span>Last activity:</span> {formatDateTime(subjectProgress.lastActivity)}</p>
                                                                 </div>
                                                             </div>
 
                                                             {subjectProgress.topicScores && (
                                                                 <div className="topics-section">
-                                                                <h5 className="sub-section-title">Điểm theo chủ đề:</h5>
+                                                                <h5 className="sub-section-title">Scores by topic:</h5>
                                                                 <div className="topics-container">
                                                                     {Object.entries(subjectProgress.topicScores).map(([topic, score]) => (
                                                                     <div key={topic} className="topic-item">
@@ -715,17 +715,17 @@ const ClassDetail = () => {
                                                         {/* Student Performance Section */}
                                                         <div className="student-performance">
                                                             <h4 className="section-title">
-                                                            Kết quả học sinh
+                                                            Student Performance
                                                             </h4>
                                                             <div className="students-list">
                                                             {Object.entries(selectedHistory.studentPerformance).map(([studentId, perf]) => (
                                                                 <div key={studentId} className="student-card">
                                                                 <h5 className="student-card__id">{studentId}</h5>
                                                                 <div className="student-card__stats">
-                                                                    <p><span>Điểm:</span> {perf.totalScore}</p>
-                                                                    <p><span>Đúng/Sai:</span> {perf.correctAnswers}/{perf.incorrectAnswers}</p>
-                                                                    <p><span>Thời gian TB:</span> {perf.averageResponseTime}s</p>
-                                                                    <p><span>Hoạt động:</span> Hoàn thành: {perf.completedActivities}, Bỏ qua: {perf.skippedActivities}</p>
+                                                                    <p><span>Score:</span> {perf.totalScore}</p>
+                                                                    <p><span>True/False:</span> {perf.correctAnswers}/{perf.incorrectAnswers}</p>
+                                                                    <p><span>Average response time:</span> {perf.averageResponseTime}s</p>
+                                                                    <p><span>Activities:</span> Completed: {perf.completedActivities}, Skipped: {perf.skippedActivities}</p>
                                                                 </div>
                                                                 </div>
                                                             ))}
@@ -733,7 +733,7 @@ const ClassDetail = () => {
                                                         </div>
                                                         </div>
                                                     ) : (
-                                                        <p className="game-session-modal__empty">Không có dữ liệu chi tiết.</p>
+                                                        <p className="game-session-modal__empty">No data details available.</p>
                                                     )}
                                                     </div>
                                                 </div>

@@ -17,7 +17,7 @@ const MatchingForm = ({
   addHint,
   removeHint,
 }) => {
-  const { token } = useAuth();
+  const token = localStorage.getItem('token');
 
   const addMatchPair = () => {
     setContentItems([
@@ -64,12 +64,11 @@ const MatchingForm = ({
 
     const formData = new FormData();
     formData.append("file", file);
-
+    console.log("token", token);
     try {
       const res = await axios.post(`${API_BASE_URL}api/upload/image`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
         },
       });
 
