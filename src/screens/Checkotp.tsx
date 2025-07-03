@@ -52,8 +52,6 @@ const Checkotp = () => {
           style={{
             transform: 'scale(1.1) translateX(-1%)',
             transformOrigin: 'center',
-            maxWidth: '100%',
-            maxHeight: '100%'
           }}
         />
         <div className="!absolute !inset-0 !bg-black/10"></div>
