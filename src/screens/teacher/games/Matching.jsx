@@ -69,7 +69,6 @@ const MatchingForm = ({
       const res = await axios.post(`${API_BASE_URL}api/upload/image`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
         },
       });
 
