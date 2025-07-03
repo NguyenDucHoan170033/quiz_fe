@@ -210,14 +210,7 @@ const MatchingActivity = ({ activity, submitting, submitAnswer, contentItem }) =
         submitAnswer({
             isCorrect: isCorrectPair,
             matchedPairs,
-            answer: {
-                connections: matches.map(match => ({
-                    leftId: match.leftId,
-                    rightId: match.rightId
-                })),
-                leftItems: leftItems.map(({ id, pairId }) => ({ id, pairId })),
-                rightItems: rightItems.map(({ id, pairId }) => ({ id, pairId }))
-            }
+           
         });
 
         setTimeout(() => {
