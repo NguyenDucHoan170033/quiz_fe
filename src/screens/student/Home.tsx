@@ -220,7 +220,7 @@ const StudentHome: React.FC = () => {
       <div className="!relative !top-100 !right-20 !z-20 !flex !flex-col !items-center !justify-center">
         {!joined ? (
           <div className="!flex !flex-col !items-center !animate-fade-in">
-            <p className="!text-[#ffffff] !text-[18px] !font-bold !mb-4 !animate-fade-in">Enter Code Room</p>
+            <p className="!text-[#ffffff] !text-[18px] !font-bold !mb-4 !animate-fade-in">Nhập Code Room</p>
             <input
               type="text"
               value={roomCode}
@@ -244,10 +244,10 @@ const StudentHome: React.FC = () => {
                   </svg>
                   Joining...
                 </span>
-              ) : 'JOIN ROOM'}
+              ) : 'VÀO PHÒNG'}
             </button>
           </div>
-        ) : ( 
+        ) : (
           <div className="!bg-white !bg-opacity-90 !rounded-2xl !p-8 !shadow-xl !max-w-md !w-full !animate-fade-in">
             <div className="!mb-6">
               <div className="!flex !items-center !mb-2">
@@ -277,7 +277,7 @@ const StudentHome: React.FC = () => {
                   {participants.length}
                 </span>
               </div>
-              <div className={`${participants.length >= 3 ? '!max-h-25 !overflow-y-auto' : ''} !pr-1`}>
+              <div className="!max-h-60 !overflow-y-auto !pr-1">
                 {participants.length === 0 ? (
                   <div className="!flex !items-center !justify-center !py-4">
                     <svg className="!animate-spin !h-5 !w-5 !text-gray-500 !mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

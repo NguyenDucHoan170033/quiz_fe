@@ -15,9 +15,6 @@ const StudentLayout: React.FC = () => {
     } else if (path === "/student/logout") {
       setActiveNav("LOGOUT");
     }
-      else if (path === "/student/classroom") {
-      setActiveNav("CLASSROOM");
-  }
   }, [location]);
 
   const handleNavClick = (navText: string) => {
@@ -31,9 +28,6 @@ const StudentLayout: React.FC = () => {
     } else if (navText === "HISTORY") {
       navigate("/student/profile");
     }
-      else if (navText === "CLASSROOM") {
-      navigate("/student/classroom");
-  }
   };
 
   return (
@@ -53,12 +47,6 @@ const StudentLayout: React.FC = () => {
               text="CLASS" 
               active={activeNav === "CLASS"}
               onClick={() => handleNavClick("CLASS")}
-            />
-              <NavItem 
-              icon={<img src="/classroom.svg" alt="Classroom" className="!w-10 !h-10 !mr-3.5 relative left-2" />} 
-              text="CLASSROOM" 
-              active={activeNav === "CLASSROOM"}
-              onClick={() => handleNavClick("CLASSROOM")}
             />
             <NavItem 
               icon={<img src="/profile.svg" alt="Profile" className="relative !w-10 !h-12 left-2 !mr-4" />} 

@@ -1096,16 +1096,16 @@ const GameActivityEditor = () => {
                   </div>
                 </div>
               ) : (
-                <div className="select-activity-content !flex !flex-col !h-full !overflow-hidden">
-                  <div className="activity-selection-container !flex !flex-1 !min-h-0 !overflow-hidden">
+                <div className="select-activity-content !flex !flex-col !flex-1 !overflow-hidden">
+                  <div className="activity-selection-container !flex !flex-1 !overflow-hidden">
                     {/* Vertical sidebar for activity type filters */}
-                    <div className="activity-type-sidebar !w-72 !border-r !border-gray-200 !bg-gray-50 !flex !flex-col">
-                      <div className="activity-type-sidebar-header !p-4 !border-b !border-gray-200 !flex-shrink-0">
+                    <div className="activity-type-sidebar !w-72 !border-r !border-gray-200 !bg-gray-50 !overflow-y-auto">
+                      <div className="activity-type-sidebar-header !p-4 !border-b !border-gray-200">
                         <h3 className="!text-sm !font-semibold !text-gray-500 !uppercase !tracking-wider">
                           Filter Types
                         </h3>
                       </div>
-                      <div className="activity-type-list !flex-1 !overflow-y-auto !py-2">
+                      <div className="activity-type-list !py-2">
                         <button
                           className={`activity-type-item !w-full !text-left !px-4 !py-2 !flex !items-center !gap-2 !transition-colors ${activeTypeFilter === "ALL"
                             ? "!bg-indigo-50 !text-indigo-700 !font-medium active"
@@ -1168,8 +1168,8 @@ const GameActivityEditor = () => {
                     </div>
 
                     {/* Activities list container with pagination */}
-                    <div className="activities-list-container !flex-1 !flex !flex-col !min-h-0 !overflow-hidden">
-                      <div className="activities-list-header !p-4 !border-b !border-gray-200 !flex !justify-between !items-center !bg-white !flex-shrink-0">
+                    <div className="activities-list-container !flex-1 !flex !flex-col !overflow-hidden">
+                      <div className="activities-list-header !p-4 !border-b !border-gray-200 !flex !justify-between !items-center !bg-white">
                         <h3 className="!font-medium !text-gray-700">
                           Activities ({filteredActivities.length})
                         </h3>
@@ -1197,9 +1197,9 @@ const GameActivityEditor = () => {
                           </svg>
                         </div>
                       </div>
-                      <div className="activities-list-scrollable !flex-1 !overflow-y-auto !p-6 !min-h-0">
+                      <div className="activities-list-scrollable !flex-1 !overflow-y-auto !p-6">
                         {filteredActivities.length > 0 ? (
-                          <div className="!space-y-4">
+                          <div className="!grid !grid-cols-1 !gap-6">
                             {paginatedActivities.map((activity) => {
                               const isSelected =
                                 selectedActivities.findIndex(
@@ -1208,12 +1208,12 @@ const GameActivityEditor = () => {
                               return (
                                 <div
                                   key={activity.id}
-                                  className={`activity-select-item !border !rounded-lg !overflow-hidden !transition-all !duration-200 !cursor-pointer !hover:shadow-md !relative
+                                  className={`activity-select-item !border !rounded-lg !overflow-hidden !transition-all !duration-200 !cursor-pointer !hover:shadow-md 
           ${isSelected ? "!border-indigo-500 !bg-indigo-50" : "!border-gray-200 !bg-white"} 
-          !w-full !p-4`}
+          !w-full !mb-4 !p-6`}
                                   onClick={() => selectActivity(activity)}
                                 >
-                                  <div className="!flex !items-center !justify-between !gap-4">
+                                  <div className="!p-4 !flex !items-center !justify-between !gap-4">
                                     <div className="activity-select-info !flex-1 !min-w-0">
                                       <div className="activity-select-title !flex !items-center !gap-2">
                                         <h3 className="!text-lg !font-medium !text-gray-800">
@@ -1279,10 +1279,10 @@ const GameActivityEditor = () => {
                                         )}
                                       </div>
                                     </div>
-                                    <div className="activity-select-checkbox !flex !items-center !justify-center !flex-shrink-0">
+                                    <div className="activity-select-checkbox !flex !items-center !justify-center">
                                       {isSelected && (
                                         <>
-                                          <div className="selection-order !absolute !top-2 !right-2 !w-6 !h-6 !rounded-full !bg-indigo-600 !text-white !flex !items-center !justify-center !text-xs !font-bold">
+                                          <div className="selection-order !absolute !top-0 !left-0 !transform !-translate-x-1/2 !-translate-y-1/2 !w-6 !h-6 !rounded-full !bg-indigo-600 !text-white !flex !items-center !justify-center !text-xs !font-bold">
                                             {
                                               selectedActivities.find(
                                                 (a) => a.id === activity.id
@@ -1337,7 +1337,7 @@ const GameActivityEditor = () => {
                       </div>
 
                       {totalPages > 1 && (
-                        <div className="pagination-controls !p-4 !border-t !border-gray-200 !bg-white !flex !items-center !justify-between !flex-shrink-0">
+                        <div className="pagination-controls !p-4 !border-t !border-gray-200 !bg-white !flex !items-center !justify-between">
                           <div className="!flex !items-center !gap-2">
                             <button
                               className="pagination-button !p-2 !rounded !text-gray-500 !hover:text-indigo-600 !hover:bg-indigo-50 !transition-colors !disabled:opacity-50 !disabled:cursor-not-allowed"
@@ -1442,7 +1442,7 @@ const GameActivityEditor = () => {
                     </div>
                   </div>
 
-                  <div className="modal-actions !p-6 !border-t !border-gray-200 !bg-gray-50 !flex !justify-end !gap-4 !flex-shrink-0">
+                  <div className="modal-actions !p-6 !border-t !border-gray-200 !bg-gray-50 !flex !justify-end !gap-4">
                     <button
                       className="cancel-button !px-6 !py-3 !border !border-gray-300 !text-gray-700 !font-medium !rounded-lg !hover:bg-gray-100 !transition-colors"
                       onClick={closeAddActivityModal}

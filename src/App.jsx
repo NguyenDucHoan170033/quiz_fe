@@ -166,7 +166,6 @@ function App() {
             <Route path="profile" element={<ProfileStudent />} />
             <Route path="info" element={<Info />} />
             <Route path="logout" element={<Logout />} />
-            <Route path="classroom" element={<StudentJoinClass />} />
           </Route>
 
           <Route path="/unauthorized" element={<Unauthorized />} />

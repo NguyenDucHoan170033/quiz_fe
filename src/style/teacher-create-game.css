@@ -344,7 +344,6 @@
   
   /* Modal Header */
   .modal-header {
-    background: linear-gradient(90deg, var(--primary-color), var(--text-main)) !important;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -459,45 +458,28 @@
     margin-left: 4px;
   }
   
-  .modal-form .form-input,
-  .modal-form .form-textarea,
-  .modal-form .form-select {
-    width: 100% !important;
-    padding: 10px 12px !important;
-    border: 1px solid #d1d5db !important;
-    border-radius: 8px !important;
-    font-size: 0.875rem !important;
-    transition: border-color 0.2s, box-shadow 0.2s !important;
-    background-color: #ffffff !important;
-    color: #374151 !important;
+  .form-input,
+  .form-textarea,
+  .form-select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
   }
   
-  .modal-form .form-input::placeholder,
-  .modal-form .form-textarea::placeholder {
-    color: #9ca3af !important;
-    opacity: 1 !important;
+  .form-input:focus,
+  .form-textarea:focus,
+  .form-select:focus {
+    outline: none;
+    border-color: #7e22ce;
+    box-shadow: 0 0 0 3px rgba(126, 34, 206, 0.1);
   }
   
-  .modal-form .form-select option {
-    background-color: #ffffff !important;
-    color: #374151 !important;
-  }
-  
-  .modal-form .form-input:focus,
-  .modal-form .form-textarea:focus,
-  .modal-form .form-select:focus {
-    outline: none !important;
-    border-color: #7e22ce !important;
-    box-shadow: 0 0 0 3px rgba(126, 34, 206, 0.1) !important;
-    background-color: #ffffff !important;
-    color: #374151 !important;
-  }
-  
-  .modal-form .form-textarea {
-    min-height: 80px !important;
-    resize: vertical !important;
-    background-color: #ffffff !important;
-    color: #374151 !important;
+  .form-textarea {
+    min-height: 80px;
+    resize: vertical;
   }
   
   /* Tags Input */
@@ -505,7 +487,6 @@
     border: 1px solid #d1d5db;
     border-radius: 8px;
     padding: 8px;
-    background-color: #ffffff;
   }
   
   .tags-display {
@@ -554,14 +535,10 @@
     border: none;
     padding: 8px;
     font-size: 0.875rem;
-    background-color: transparent;
-    color: #374151;
   }
   
   .tag-input:focus {
     outline: none;
-    background-color: transparent;
-    color: #374151;
   }
   
   .tag-add-button {

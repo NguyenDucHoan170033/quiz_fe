@@ -3,16 +3,6 @@ import React, { useState, useEffect } from 'react';
 const MultipleChoiceActivity = ({ activity, submitting, submitAnswer, contentItem }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [answered, setAnswered] = useState(false);
-    const [shuffledOptions, setShuffledOptions] = useState([]);
-
-    const shuffleArray = (array) => {
-        const shuffled = [...array];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-        return shuffled;
-    };
 
     useEffect(() => {
         setCurrentQuestionIndex(0);
@@ -48,7 +38,6 @@ const MultipleChoiceActivity = ({ activity, submitting, submitAnswer, contentIte
 
     const mcContent = getContent();
     const mcQuestions = extractQuestions(mcContent);
-    
     if (mcQuestions.length === 0) {
         return (
             <div className="quiz-activity">
@@ -60,7 +49,6 @@ const MultipleChoiceActivity = ({ activity, submitting, submitAnswer, contentIte
             </div>
         );
     }
-
     const currentQuestion = mcQuestions[currentQuestionIndex];
     let options = [];
 
@@ -72,22 +60,11 @@ const MultipleChoiceActivity = ({ activity, submitting, submitAnswer, contentIte
         }
     }
 
-    // Shuffle options when question changes
-    useEffect(() => {
-        if (options.length > 0) {
-            const shuffled = shuffleArray(options.map((option, originalIndex) => ({
-                option,
-                originalIndex
-            })));
-            setShuffledOptions(shuffled);
-        }
-    }, [currentQuestionIndex, JSON.stringify(options)]);
-
-    const handleSubmitAnswer = (shuffledItem, shuffledIndex) => {
+    const handleSubmitAnswer = (answer, index) => {
         if (answered) return;
         submitAnswer({
             questionIndex: currentQuestionIndex,
-            selectedOption: shuffledItem.originalIndex // Send the original index
+            selectedOption: index // Send the index instead of text
         });
         setAnswered(true);
     };
@@ -98,20 +75,20 @@ const MultipleChoiceActivity = ({ activity, submitting, submitAnswer, contentIte
             <p>{activity.instructions}</p>
 
             <h4>{currentQuestion.question || currentQuestion.text || "Question"}</h4>
-            <div className="flex flex-row gap-2 py-2 overflow-x-auto">
-                {shuffledOptions.length > 0 ? (
-                    shuffledOptions.map((shuffledItem, shuffledIndex) => (
+            <div className="flex flex-row gap-2 py-2 overflow-x-auto">  {/* Removed overflow-x-auto */}
+                {options.length > 0 ? (
+                    options.map((option, index) => (
                         <button
-                            key={shuffledIndex}
-                            onClick={() => handleSubmitAnswer(shuffledItem, shuffledIndex)}
+                            key={index}
+                            onClick={() => handleSubmitAnswer(option, index)}
                             className={`flex-1 min-w-[120px] p-3 rounded-lg transition-colors whitespace-nowrap ${
                                 answered 
-                                    ? 'bg-gray-200 dark:bg-gray-700 cursor-default text-gray-800 dark:text-gray-200' 
-                                    : 'bg-white dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-blue-900 text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600'
+                                    ? 'bg-gray-200 cursor-default text-gray-800' 
+                                    : 'bg-white hover:bg-blue-100 text-gray-800 border border-gray-300'
                             } ${submitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                             disabled={submitting || answered}
                         >
-                            {typeof shuffledItem.option === 'object' ? shuffledItem.option.text : shuffledItem.option}
+                            {typeof option === 'object' ? option.text : option}
                         </button>
                     ))
                 ) : (

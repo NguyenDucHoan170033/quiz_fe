@@ -44,7 +44,7 @@
   .nav-item {
     display: flex;
     align-items: center;
-    padding: 12px 48px 12px 20px; /* tăng padding phải để icon không đè lên text */
+    padding: 12px 20px;
     color: #495057;
     text-decoration: none;
     transition: all 0.3s;
@@ -75,14 +75,6 @@
     right: 15px;
     top: 50%;
     transform: translateY(-50%);
-    display: flex;
-    align-items: center;
-    color: inherit;
-  }
-
-  .icon-container svg {
-    stroke: currentColor;
-    color: inherit;
   }
   
   .upgrade-section {

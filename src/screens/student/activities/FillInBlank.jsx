@@ -3,9 +3,10 @@ import { Lightbulb } from "lucide-react";
 
 const FillInBlankGame = ({ 
     activity, 
-    content, 
+    contentItem, 
     submitting, 
     submitAnswer, 
+    currentContentIndex,
     onComplete = () => {} 
 }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -17,43 +18,47 @@ const FillInBlankGame = ({
     const [feedback, setFeedback] = useState({});
     const inputRef = useRef(null);
 
-    const isMultiQuestion = Array.isArray(content?.questions);
-    const questionObj = isMultiQuestion ? content.questions[currentQuestionIndex] : content;
-    const { questionText = "", blanks = [], hints = [], explanation = "" } = isMultiQuestion
-        ? {
-            questionText: questionObj?.question || "",
-            blanks: questionObj?.blanks || [],
-            hints: questionObj?.hints || [],
-            explanation: questionObj?.explanation || ""
-        }
-        : content || {};
+    // Unified content handling
+    const getContent = () => {
+        if (contentItem && contentItem.data) return contentItem.data;
+        return activity?.content || { questions: [], hints: [] };
+    };
 
+    const content = getContent();
+
+    // Reset state when content changes
     useEffect(() => {
+        setCurrentQuestionIndex(0);
         setUserAnswers([]);
         setAnswered(false);
         setCurrentAnswer("");
         setActiveBlankIndex(null);
-        setFeedback({});
-    }, [currentQuestionIndex, content]);
+    }, [content, activity]);
 
+    // Initialize userAnswers when question changes
     useEffect(() => {
-        if (questionText) {
-            const blankCount = getBlankCount(questionText);
+        if (content.questions && content.questions[currentQuestionIndex]) {
+            const question = content.questions[currentQuestionIndex];
+            const parts = question.question.split(/_+/g);
+            const blankCount = parts.length - 1;
             setUserAnswers(new Array(blankCount).fill(""));
         }
-    }, [questionText]);
+    }, [currentQuestionIndex, content]);
 
+    // Focus input when activeBlankIndex changes
     useEffect(() => {
         if (activeBlankIndex !== null && inputRef.current) {
             inputRef.current.focus();
         }
     }, [activeBlankIndex]);
 
+    // Get blank count from question text
     const getBlankCount = (questionText) => {
         const parts = questionText.split(/_+/g);
         return parts.length - 1;
     };
 
+    // Get word count for a specific blank
     const getWordCount = (questionText, blankIndex) => {
         const parts = questionText.split(/_+/g);
         if (blankIndex >= parts.length - 1) return 1;
@@ -68,59 +73,146 @@ const FillInBlankGame = ({
         return blankText.includes('__') ? "multiple" : 1;
     };
 
+    // Handle answer submission
     const handleAnswer = async (blankIndex) => {
         if (!currentAnswer.trim() || submitting || answered) return;
 
         try {
-            const correctAnswer = isMultiQuestion
-                ? (questionObj.answer?.[blankIndex] || questionObj.blanks?.[blankIndex]?.answer || "")
-                : blanks[blankIndex]?.answer || "";
-            const alternatives = isMultiQuestion
-                ? (questionObj.alternatives?.[blankIndex] || questionObj.blanks?.[blankIndex]?.alternatives || [])
-                : blanks[blankIndex]?.alternatives || [];
+            const currentQuestion = content.questions[currentQuestionIndex];
+            const correctAnswer = currentQuestion.answer[blankIndex];
+            const alternatives = currentQuestion.alternatives?.[blankIndex] || [];
             
+            // Format the answer data according to backend expectations
             const answerData = {
-                questionIndex: isMultiQuestion ? currentQuestionIndex : 0,
+                questionIndex: currentQuestionIndex,
                 blankIndex: blankIndex,
                 answer: currentAnswer.trim(),
-                acceptableAnswers: isMultiQuestion
-                    ? { [currentQuestionIndex]: { [blankIndex]: [correctAnswer, ...alternatives] } }
-                    : [correctAnswer, ...alternatives]  // Flat list for single question
+                acceptableAnswers: {
+                    [currentQuestionIndex]: {
+                        [blankIndex]: [correctAnswer, ...alternatives].filter(Boolean)
+                    }
+                }
             };
 
-            await submitAnswer(answerData);
             setAnswered(true);
-            setFeedback({
-                correct: true,
-                correctAnswer: correctAnswer,
-                isAlternative: alternatives.length > 1
-            });
+            const result = await submitAnswer(answerData);
+            
+            // Update user answers immediately
+            const newAnswers = [...userAnswers];
+            newAnswers[blankIndex] = currentAnswer.trim();
+            setUserAnswers(newAnswers);
+            
+            // Normalize answers for comparison
+            const normalizedUserAnswer = currentAnswer.trim().toLowerCase();
+            const normalizedCorrectAnswer = correctAnswer.toLowerCase();
+            const normalizedAlternatives = alternatives.map(alt => alt.toLowerCase());
+            
+            // Check if the answer matches the correct answer or any alternative
+            const isCorrect = normalizedUserAnswer === normalizedCorrectAnswer;
+            const isAlternative = normalizedAlternatives.some(alt => alt === normalizedUserAnswer);
+            
+            // Set feedback based on answer type
+            if (isCorrect) {
+                setFeedback(prev => ({
+                    ...prev,
+                    [blankIndex]: {
+                        correct: true
+                    }
+                }));
+            } else if (isAlternative) {
+                setFeedback(prev => ({
+                    ...prev,
+                    [blankIndex]: {
+                        correct: true,
+                        isAlternative: true,
+                        correctAnswer: correctAnswer
+                    }
+                }));
+            } else {
+                setFeedback(prev => ({
+                    ...prev,
+                    [blankIndex]: {
+                        correct: false,
+                        correctAnswer: correctAnswer
+                    }
+                }));
+            }
+            
+            // Reset current answer and active blank
             setCurrentAnswer("");
             setActiveBlankIndex(null);
+            
+            // Check if all blanks are filled
+            const blankCount = getBlankCount(currentQuestion.question);
+            const filledBlanks = newAnswers.filter(answer => answer && answer.trim() !== "").length;
+
+            if (filledBlanks === blankCount) {
+                // Add delay before moving to next question or completing
+                setTimeout(() => {
+                    if (currentQuestionIndex < content.questions.length - 1) {
+                        setCurrentQuestionIndex(prev => prev + 1);
+                        setAnswered(false);
+                        setActiveBlankIndex(null);
+                        setFeedback({}); // Reset feedback when moving to next question
+                    } else {
+                        // Notify server that all questions are completed
+                        submitAnswer({
+                            completed: true,
+                            questionIndex: currentQuestionIndex,
+                            allAnswers: newAnswers
+                        }).then(() => {
+                            // Call onComplete after server is notified
+                            if (typeof onComplete === 'function') {
+                                onComplete();
+                            }
+                        });
+                    }
+                }, 1500); // Reduced delay to 1.5 seconds
+            } else {
+                // Clear feedback after 1.5 seconds for single blank
+                setTimeout(() => {
+                    setFeedback(prev => {
+                        const newFeedback = { ...prev };
+                        delete newFeedback[blankIndex];
+                        return newFeedback;
+                    });
+                    setAnswered(false);
+                }, 1500);
+            }
         } catch (error) {
             console.error('Error submitting answer:', error);
             setAnswered(false);
         }
     };
 
-    if (isMultiQuestion && currentQuestionIndex >= content.questions.length) {
+    if (currentQuestionIndex >= content.questions.length) {
         return (
             <div className="!p-6 !space-y-6 !bg-white !rounded-lg !shadow-md">
                 <h2 className="!text-2xl !font-bold !text-center">Activity Complete!</h2>
+                <div className="!space-y-4">
+                    {content.questions.map((question, index) => (
+                        <div key={index} className="!p-4 !border !rounded-lg">
+                            <p className="!font-medium !mb-2">{question.question}</p>
+                            <div className="!space-y-2">
+                                {userAnswers.map((answer, blankIndex) => (
+                                    <div key={blankIndex} className="!flex !items-center !gap-2">
+                                        <p className="!text-gray-600">Blank {blankIndex + 1}: {answer || "No answer"}</p>
+                                        <p className="!text-green-600">Correct: {question.answer[blankIndex]}</p>
+                                    </div>
+                                ))}
+                            </div>
+                            {question.explanation && (
+                                <p className="!text-gray-500 !mt-2">Explanation: {question.explanation}</p>
+                            )}
+                        </div>
+                    ))}
+                </div>
             </div>
         );
     }
 
-    if (!questionText) {
-        return (
-            <div className="!p-6 !space-y-6 !bg-white !rounded-lg !shadow-md">
-                <h2 className="!text-2xl !font-bold !text-center">Loading question...</h2>
-            </div>
-        );
-    }
-
-    const parts = questionText.split(/_+/g);
-    const blankCount = getBlankCount(questionText);
+    const currentQuestion = content.questions[currentQuestionIndex];
+    const parts = currentQuestion.question.split(/_+/g);
 
     return (
         <div className="!p-6 !space-y-6 !bg-white !rounded-lg !shadow-md">
@@ -136,7 +228,7 @@ const FillInBlankGame = ({
                         if (index < parts.length - 1) {
                             const isActive = activeBlankIndex === index;
                             const isAnswered = userAnswers[index];
-                            const wordCount = getWordCount(questionText, index);
+                            const wordCount = getWordCount(currentQuestion.question, index);
                             
                             return (
                                 <div key={index} className="!flex !items-center !gap-2">
@@ -164,18 +256,19 @@ const FillInBlankGame = ({
                     })}
                 </div>
 
+                {/* Display feedback below the question */}
                 <div className="!space-y-2">
-                    {Object.entries(feedback).map(([blankIndex, fb]) => (
-                        <div key={blankIndex} className={`!text-sm transition-opacity duration-300 ${fb.correct ? '!text-green-500' : '!text-red-500'}`}>
-                            {fb.correct ? (
-                                fb.isAlternative ? (
+                    {Object.entries(feedback).map(([blankIndex, feedback]) => (
+                        <div key={blankIndex} className={`!text-sm transition-opacity duration-300 ${feedback.correct ? '!text-green-500' : '!text-red-500'}`}>
+                            {feedback.correct ? (
+                                feedback.isAlternative ? (
                                     <div>
-                                        Alternative accepted. Main answer: "{fb.correctAnswer}"
+                                        In another answer: "{feedback.correctAnswer}"
                                     </div>
                                 ) : null
                             ) : (
                                 <div>
-                                    Correct answer is "{fb.correctAnswer}"
+                                    Correct answer is "{feedback.correctAnswer}"
                                 </div>
                             )}
                         </div>
@@ -190,7 +283,7 @@ const FillInBlankGame = ({
                             className="!flex-1 !px-4 !py-2 !border !rounded-md focus:!outline-none focus:!ring-2 focus:!ring-blue-500 transition-all duration-300"
                             value={currentAnswer}
                             onChange={(e) => setCurrentAnswer(e.target.value)}
-                            placeholder={`Type ${getWordCount(questionText, activeBlankIndex) === "multiple" ? "multiple" : "a"} word${getWordCount(questionText, activeBlankIndex) === "multiple" ? "s" : ""} here...`}
+                            placeholder={`Type ${getWordCount(currentQuestion.question, activeBlankIndex) === "multiple" ? "multiple" : "a"} word${getWordCount(currentQuestion.question, activeBlankIndex) === "multiple" ? "s" : ""} here...`}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                     handleAnswer(activeBlankIndex);
@@ -208,7 +301,7 @@ const FillInBlankGame = ({
                     </div>
                 )}
 
-                {hints.length > 0 && (
+                {(content.hints || []).length > 0 && (
                     <div className="!space-y-2">
                         <button 
                             className="!flex !items-center !gap-2 !px-4 !py-2 !text-blue-600 hover:!text-blue-800 transition-colors duration-300"
@@ -219,22 +312,16 @@ const FillInBlankGame = ({
 
                         {showFeedback && (
                             <div className="!p-4 !bg-gray-50 !rounded-md transition-all duration-300">
-                                {hints.map((hint, index) => (
+                                {(content.hints || []).map((hint, index) => (
                                     <p key={index} className="!text-gray-600">{hint}</p>
                                 ))}
                             </div>
                         )}
                     </div>
                 )}
-
-                {explanation && userAnswers.every(a => a.trim() !== "") && (
-                    <div className="!p-4 !bg-blue-50 !rounded-md">
-                        <p className="!text-blue-700"><strong>Explanation:</strong> {explanation}</p>
-                    </div>
-                )}
             </div>
         </div>
     );
 };
-    
+
 export default FillInBlankGame;

@@ -22,7 +22,7 @@ const ForgotPass = () => {
     setMessage('');
 
     if (!validatePassword(newPassword)) {
-      setMessage('Password must be at least 8 characters, including uppercase, lowercase, number, and special character');
+      setMessage('Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt');
       setIsLoading(false);
       return;
     }
@@ -34,11 +34,11 @@ const ForgotPass = () => {
       });
 
       if (response.status === 200) {
-        setMessage('OTP code has been sent to your email. Please check your email.');
-        navigate('/checkotp', { state: { email: email, newPassword: newPassword, isPasswordReset: true } });
+        setMessage('Mã OTP đã được gửi đến email của bạn. Vui lòng kiểm tra email.');
+        navigate('/checkotp', { state: { email: email, isPasswordReset: true } });
       }
     } catch (error: any) {
-      setMessage(error.response?.data || 'An error occurred while sending the password reset request');
+      setMessage(error.response?.data || 'Có lỗi xảy ra khi gửi yêu cầu đặt lại mật khẩu');
     } finally {
       setIsLoading(false);
     }
@@ -57,10 +57,10 @@ const ForgotPass = () => {
       <div className="!max-w-md !w-full !space-y-8 !bg-white/90 !p-10 !rounded-2xl !shadow-2xl !z-10 !relative !backdrop-blur-md !border-4 !border-indigo-900">
         <div className="!text-center">
           <h2 className="!mt-2 !text-4xl !font-extrabold !text-indigo-900 !tracking-wider !drop-shadow-lg">
-            Reset Password
+            Đặt lại mật khẩu
           </h2>
           <p className="!mt-2 !text-base !text-gray-700 !font-medium !tracking-wide">
-            Please enter your email and new password
+            Vui lòng nhập email và mật khẩu mới của bạn
           </p>
         </div>
         <form className="!mt-8 !space-y-6" onSubmit={handleSubmit}>
@@ -74,14 +74,14 @@ const ForgotPass = () => {
               type="email"
               required
               className="!mt-1 !block !w-full !px-4 !py-3 !border-2 !border-indigo-400 !rounded-lg !shadow-sm !placeholder-gray-400 !focus:!outline-none !focus:!ring-2 !focus:!ring-indigo-500 !focus:!border-indigo-500 !bg-white !text-indigo-900 !font-semibold !transition-all !duration-200"
-              placeholder="Enter your email"
+              placeholder="Nhập email của bạn"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div>
             <label htmlFor="newPassword" className="!block !text-sm !font-bold !text-indigo-900 !mb-2 !uppercase !tracking-wider">
-              New Password
+              Mật khẩu mới
             </label>
             <input
               id="newPassword"
@@ -89,12 +89,12 @@ const ForgotPass = () => {
               type="password"
               required
               className="!mt-1 !block !w-full !px-4 !py-3 !border-2 !border-indigo-400 !rounded-lg !shadow-sm !placeholder-gray-400 !focus:!outline-none !focus:!ring-2 !focus:!ring-indigo-500 !focus:!border-indigo-500 !bg-white !text-indigo-900 !font-semibold !transition-all !duration-200"
-              placeholder="Enter new password"
+              placeholder="Nhập mật khẩu mới"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
             />
             <p className="!mt-2 !text-xs !text-gray-500 !font-medium !italic">
-              Password must be at least 8 characters, including uppercase, lowercase, number, and special character.
+              Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.
             </p>
           </div>
           <div>
@@ -109,9 +109,9 @@ const ForgotPass = () => {
                     <circle className="!opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="!opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
                   </svg>
-                  Processing...
+                  Đang xử lý...
                 </span>
-              ) : 'Send Request'}
+              ) : 'Gửi yêu cầu'}
             </button>
           </div>
         </form>
@@ -131,7 +131,7 @@ const ForgotPass = () => {
             onClick={() => navigate('/login')}
             className="!text-sm !font-bold !text-indigo-700 !hover:text-indigo-900 !transition !duration-150 !underline !uppercase !tracking-wider"
           >
-            Back to Login
+            Quay lại đăng nhập
           </button>
         </div>
       </div>

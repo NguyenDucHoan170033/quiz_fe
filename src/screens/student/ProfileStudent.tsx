@@ -65,7 +65,7 @@ interface StudentProgress {
   displayName?: string;
 }
 
-const STUDENT_PROGRESS_API_URL = `${API_BASE_URL}api/student-progress`;
+const STUDENT_PROGRESS_URL = `${API_BASE_URL}api/student-progress`;
 
 // Add axios interceptor for authentication
 axios.interceptors.request.use(
@@ -73,14 +73,8 @@ axios.interceptors.request.use(
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      config.headers['Content-Type'] = 'application/json';
       config.headers['Accept'] = 'application/json';
-      // Chỉ set Content-Type nếu không phải FormData
-      if (
-        config.data &&
-        !(config.data instanceof FormData)
-      ) {
-        config.headers['Content-Type'] = 'application/json';
-      }
     }
     return config;
   },
@@ -133,14 +127,14 @@ const ProfileStudent: React.FC = () => {
 
         // First update the progress
         await axios.post(
-          `${STUDENT_PROGRESS_API_URL}/${studentEmail}/update`,
+          `${STUDENT_PROGRESS_URL}/${studentEmail}/update`,
           {},
           { withCredentials: true }
         );
 
         // Then get the updated progress
         const response = await axios.get(
-          `${STUDENT_PROGRESS_API_URL}/${studentEmail}`,
+          `${STUDENT_PROGRESS_URL}/${studentEmail}`,
           { withCredentials: true }
         );
 
@@ -261,238 +255,327 @@ const ProfileStudent: React.FC = () => {
     return ranks.length > 0 ? Math.min(...ranks) : 0;
   };
 
-   return (
+  return (
     <>
-      {/* Background */}
-      <div className="!fixed !inset-0 !z-0 !bg-gradient-to-br !from-blue-50 !via-indigo-50 !to-purple-50"></div>
+    {/* Background image - restored */}
+    <div
+      className="!fixed !inset-0 !z-0"
+      style={{
+        backgroundImage: "url('/spiritedaway-bg.png')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    />
 
-      {/* Aspect Ratio Container */}
-      <div className="relative w-full max-w-7xl mx-auto" style={{ aspectRatio: "16/9" }}>
-        {/* Main content */}
-        <div className="absolute inset-0">
-          {/* Date display */}
-          <div className="!absolute !top-6 !right-6 !z-20">
-            <div className="!relative">
-              <div className="!bg-gradient-to-r !from-blue-500 !to-blue-600 !px-6 !py-4 !rounded-2xl !border-0 !shadow-xl">
-                <div className="!text-white !font-bold !text-base !text-center">
-                  {new Date().toLocaleDateString("en-US", {
-                    weekday: "long",
-                    month: "long",
-                    day: "numeric",
-                  })}
+    {/* Aspect Ratio Container */}
+    <div className="relative w-full max-w-7xl mx-auto" style={{ aspectRatio: '16/9' }}>
+    
+     {/* vo dien */}
+     <div className="!absolute !top-[328px] !left-[-190px] ">
+        <img
+          src="/vodien.png"
+          alt="no-face"
+          className="!w-90 !h-100  !rotate-170 !opacity-75"
+          style={{ transform: 'rotateX(160deg)' }}
+        />
+      </div>
+   {/* gold */}
+      <div className="!absolute !top-[549px] !left-[-80px] ">
+        <img
+          src="/gold2.png"
+          alt="no-face"
+          className="!w-45 !h-22 !filter !brightness-140   "
+      
+        />
+      </div>
+
+      {/* chihiro2 */}
+      <div className="!absolute !bottom-[595px] !right-[590px]">
+        <img
+          src="/chihiro2.png"
+          alt="chihiro2"
+          className="!h-32 !brightness-110 !rotate-9 !z-10 !animate-gentle-rest"
+        />
+      </div>
+      {/* lin */}
+      <div className="!absolute !bottom-[580px] !right-[150px] !z-0">
+        <img
+          src="/lin.png"
+          alt="lin"
+          className="!h-40 !w-42 !brightness-110 !rotate-180 !relative !animate-gentle-rest"
+          style={{ transform: 'rotateX(180deg)' }}
+        />
+      </div>
+
+      {/* Main content - covers the whole aspect-ratio box */}
+      <div className="absolute inset-0">
+        {/* Traditional paper lantern date display */}
+        <div className="!absolute !top-6 !right-6 !z-20">
+          <div className="!relative">
+            {/* Lantern body */}
+            <div className="!bg-gradient-to-b !from-red-400/90 !to-red-600/90 !backdrop-blur-sm !px-6 !py-4 !rounded-full !border-4 !border-yellow-400/80 !shadow-2xl !relative">
+              {/* Lantern glow effect */}
+              <div className="!absolute !inset-0 !bg-yellow-300/20 !rounded-full !blur-md !animate-pulse-glow"></div>
+              {/* Lantern top */}
+              <div className="!absolute !-top-3 !left-1/2 !transform !-translate-x-1/2 !w-8 !h-3 !bg-yellow-600/90 !rounded-t-full !border-2 !border-yellow-400"></div>
+              {/* Lantern bottom tassel */}
+              <div className="!absolute !-bottom-4 !left-1/2 !transform !-translate-x-1/2 !w-1 !h-4 !bg-yellow-600/80"></div>
+              <div className="!absolute !-bottom-6 !left-1/2 !transform !-translate-x-1/2 !w-3 !h-2 !bg-yellow-500/80 !rounded-full"></div>
+              
+              <div className="!text-yellow-100 !font-bold !text-sm !drop-shadow-lg !relative !z-10 !text-center">
+                {new Date().toLocaleDateString('en-US', { 
+                  weekday: 'short', 
+                  month: 'short', 
+                  day: 'numeric' 
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* rat */}
+        <div className="!absolute !top-[405px] !left-[160px] !z-21">
+          <img
+            src="/rat.png"
+            alt="no-face"
+            className="!w-22  !h-19  !filter !brightness-140   "
+        
+          />
+        </div>
+
+        {/* haku */}
+        <div className="!absolute !bottom-[560px] !left-[-73px] ">
+          <img
+            src="/haku.png"
+            alt="no-face"
+            className="!w-60 !h-45   !filter !brightness-130 "
+       
+          />
+          <div className="!absolute !top-6 !right-[-140px] !bg-yellow-50/95 !px-5 !py-4 !border-3 !border-amber-800/80 !shadow-xl !max-w-[220px] !transform !rotate-2">
+              <div className="!text-amber-900 !font-bold !text-sm !leading-relaxed">
+                KHÔNG HỌC LÀ BỊ BIẾN THÀNH HEO ĐÓ, {studentProgress.displayName}!
+              </div>
+              <div className="!absolute !left-[-12px] !top-6 !w-0 !h-0 !border-t-[10px] !border-t-transparent !border-b-[10px] !border-b-transparent !border-r-[15px] !border-r-yellow-50/95"></div>
+              {/* Traditional corner decorations */}
+            
+            </div>
+          </div>
+
+        {/* Chihiro welcome with traditional speech bubble */}
+        <div className="!absolute !top-95 !right-220 !z-20 !min-w-[500px]">
+          <div className="!flex !items-start">
+            <img 
+              src="/chihiro.png" 
+              alt="chihiro" 
+              className="!h-100 !w-500  !drop-shadow-2xl !filter !brightness-110 !animate-gentle-sway"
+            />
+         
+          </div>
+        </div>
+      
+        {/* Main content - traditional Japanese building layout */}
+        <div className="!pt-20 !pb-6 !h-[calc(100vh-100px)] !flex !gap-6">
+          
+          {/* Left Column - Traditional Shrine Stats */}
+          <div className="!flex-shrink-0 !w-52 !space-y-6">
+            {/* Total Score Shrine */}
+            <div className="!relative !top-14 !transform !-rotate-2 !animate-gentle-float">
+              <div className="!relative !bg-gradient-to-b !from-red-300/85 !to-red-500/85 !backdrop-blur-sm !rounded-t-3xl !rounded-b-2xl !p-5 !border-4 !border-yellow-600/70 !shadow-2xl">
+               
+                {/* Hanging lanterns */}
+                <div className="!absolute !top-[-8px] !left-4 !w-3 !h-5 !bg-yellow-500/80 !rounded-full !border-2 !border-red-600/60 !animate-gentle-swing"></div>
+                <div className="!absolute !top-[-8px] !right-4 !w-3 !h-5 !bg-yellow-500/80 !rounded-full !border-2 !border-red-600/60 !animate-gentle-swing" style={{ animationDelay: '1s' }}></div>
+                
+                <div className="!text-center !relative !z-10">
+                  <div className="!w-8 !h-8 !mx-auto !mb-2 !text-yellow-200 !text-2xl !drop-shadow-lg !animate-gentle-glow">🏆</div>
+                  <div className="!text-yellow-100 !font-bold !text-sm !mb-2 !drop-shadow-md">Total Score</div>
+                  <div className="!text-2xl !font-bold !text-yellow-100 !drop-shadow-lg !animate-number-glow">
+                    {studentProgress.totalScore}
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+            {/* Best Rank Shrine */}
+            <div className="!relative !top-10 !transform !rotate-1 !animate-gentle-float" style={{ animationDelay: '2s' }}>
+              <div className="!relative !bg-gradient-to-b !from-orange-300/85 !to-orange-500/85 !backdrop-blur-sm !rounded-t-3xl !rounded-b-2xl !p-5 !border-4 !border-red-600/70 !shadow-2xl">
+                
+                
+                {/* Hanging lanterns */}
+                <div className="!absolute !top-[-8px] !left-4 !w-3 !h-5 !bg-red-500/80 !rounded-full !border-2 !border-yellow-600/60 !animate-gentle-swing"></div>
+                <div className="!absolute !top-[-8px] !right-4 !w-3 !h-5 !bg-red-500/80 !rounded-full !border-2 !border-yellow-600/60 !animate-gentle-swing" style={{ animationDelay: '1.5s' }}></div>
+                
+                <div className="!text-center !relative !z-10">
+                  <div className="!w-8 !h-8 !mx-auto !mb-2 !text-red-100 !text-2xl !drop-shadow-lg !animate-gentle-glow">👑</div>
+                  <div className="!text-red-100 !font-bold !text-sm !mb-2 !drop-shadow-md">Best Rank</div>
+                  <div className="!text-2xl !font-bold !text-red-100 !drop-shadow-lg !animate-number-glow">
+                    #{getWeeklyBestRank()}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Welcome message */}
-          <div className="!absolute !top-5 !left-6 !z-20">
-            <div className="!bg-white !px-6 !py-4 !rounded-2xl !shadow-lg !border-l-4 !border-blue-500">
-              <div className="!text-gray-800 !font-bold !text-xl">Welcome, {studentProgress.displayName}!</div>
-              <div className="!text-gray-600 !text-sm !mt-1">Continue your learning journey</div>
-            </div>
-          </div>
-
-          {/* Main content layout */}
-          <div className="!pt-32 !pb-6 !flex !gap-6 !px-6">
-            {/* Left Column - Stats */}
-            <div className="!flex-shrink-0 !w-64 !space-y-6">
-              {/* Total Score */}
-              <div className="!bg-white !rounded-2xl !shadow-lg !p-6 !border-l-4 !border-yellow-500">
-                <div className="!text-center">
-                  <div className="!w-12 !h-12 !mx-auto !mb-4 !bg-yellow-100 !rounded-full !flex !items-center !justify-center">
-                    <svg className="!w-6 !h-6 !text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                    </svg>
-                  </div>
-                  <div className="!text-gray-600 !font-semibold !text-sm !mb-2">Total Score</div>
-                  <div className="!text-3xl !font-bold !text-gray-800">{studentProgress.totalScore}</div>
-                </div>
-              </div>
-
-              {/* Best Rank */}
-              <div className="!bg-white !rounded-2xl !shadow-lg !p-6 !border-l-4 !border-green-500">
-                <div className="!text-center">
-                  <div className="!w-12 !h-12 !mx-auto !mb-4 !bg-green-100 !rounded-full !flex !items-center !justify-center">
-                    <svg className="!w-6 !h-6 !text-green-600" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M5 16L3 14l5.5-5.5L12 12l4.5-4.5L22 9l-2 2-4.5-4.5L12 10 8.5 6.5 5 10l-2-2 2 2z" />
-                    </svg>
-                  </div>
-                  <div className="!text-gray-600 !font-semibold !text-sm !mb-2">Best Rank</div>
-                  <div className="!text-3xl !font-bold !text-gray-800">#{getWeeklyBestRank()}</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Center Column - Recent Sessions */}
-            <div className="!flex-1 !max-w-3xl !min-w-0">
-              <div className="!bg-white !rounded-2xl !shadow-lg !p-6 !h-full !flex !flex-col !overflow-hidden">
-                <h3 className="!text-gray-800 !font-bold !text-2xl !mb-6 !flex !items-center !justify-center !flex-shrink-0">
-                  <div className="!w-8 !h-8 !bg-blue-100 !rounded-full !flex !items-center !justify-center !mr-4">
-                    <svg className="!w-5 !h-5 !text-blue-600" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                    </svg>
-                  </div>
+      
+          {/* Center Column - Main Bathhouse Building */}
+          <div className="!flex-1 !max-w-3xl">
+            <div className="!relative !top-4 !h-full !transform !rotate-0 !animate-gentle-float min-w-0" style={{ animationDelay: '1s' }}>
+              <div className="!relative !bg-gradient-to-b !from-amber-200/80 !to-orange-300/80 !backdrop-blur-md !rounded-t-[2rem] !rounded-b-3xl !p-8 !border-4 !border-red-700/60 !shadow-2xl !flex flex-col">
+        
+                {/* Traditional corner lanterns */}
+                <div className="!absolute !top-[-15px] !left-12 !w-5 !h-8 !bg-gradient-to-b !from-red-500/90 !to-red-700/90 !rounded-full !border-3 !border-yellow-400/70 !animate-lantern-glow"></div>
+                <div className="!absolute !top-[-15px] !right-12 !w-5 !h-8 !bg-gradient-to-b !from-red-500/90 !to-red-700/90 !rounded-full !border-3 !border-yellow-400/70 !animate-lantern-glow" style={{ animationDelay: '3s' }}></div>
+                
+                {/* Building pillars */}
+                <div className="!absolute !left-4 !top-8 !bottom-8 !w-2 !bg-amber-800/60 !rounded-full"></div>
+                <div className="!absolute !right-4 !top-8 !bottom-8 !w-2 !bg-amber-800/60 !rounded-full"></div>
+        
+                <h3 className="!text-red-900 !font-bold !text-3xl !mb-8 !flex !items-center !justify-center !drop-shadow-2xl !relative !z-10">
+                  <span className="!text-4xl !mr-4 !filter !drop-shadow-lg !animate-gentle-glow">🕐</span>
                   <div className="!text-center">
-                    <div className="!text-gray-800 !text-xl">Recent Sessions</div>
+                    <div className="!text-red-800 !text-2xl">Recent Sessions</div>
                   </div>
                 </h3>
-
-                <div className={`!flex-1 !pr-2 !space-y-4 ${studentProgress.recentSessions && studentProgress.recentSessions.length > 5 ? '!overflow-y-auto' : ''}`}>
-                  {studentProgress.recentSessions &&
-                    Array.isArray(studentProgress.recentSessions) &&
+        
+                <div
+                  className="space-y-3 relative z-10 pr-3"
+                >
+                  {studentProgress.recentSessions && Array.isArray(studentProgress.recentSessions) && 
                     studentProgress.recentSessions.map((session, index) => (
-                      <div
-                        key={session.id}
-                        className="!bg-gray-50 !p-4 !rounded-xl !border !border-gray-200 !hover:shadow-md !transition-all !duration-300 !flex-shrink-0"
+                      <div 
+                        key={session.id} 
+                        className="!relative !bg-gradient-to-r !from-white/70 !to-amber-50/70 !backdrop-blur-sm !p-4 !rounded-2xl !border-3 !border-orange-400/50 !shadow-lg !hover:shadow-xl !hover:scale-[1.02] !transition-all !duration-500 !transform !hover:-rotate-1"
                       >
-                        <div className="!flex !justify-between !items-center !gap-4">
-                          <div className="!flex !items-center !flex-1 !min-w-0">
-                            <div className="!w-12 !h-12 !rounded-full !bg-blue-100 !flex !items-center !justify-center !mr-4 !flex-shrink-0">
-                              <svg className="!w-6 !h-6 !text-blue-600" fill="currentColor" viewBox="0 0 24 24">
-                                {session.subject === "Math" ? (
-                                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" />
-                                ) : session.subject === "Science" ? (
-                                  <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zM5 9h14V7H5v2z" />
-                                ) : (
-                                  <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h8c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
-                                )}
-                              </svg>
+                        {/* Traditional paper texture overlay */}
+                        <div className="!absolute !inset-0 !bg-gradient-to-br !from-transparent !via-amber-100/20 !to-orange-200/20 !rounded-2xl"></div>
+                        
+                        <div className="!flex !justify-between !items-center !relative !z-10">
+                          <div className="!flex !items-center">
+                            <div className="!w-12 !h-12 !rounded-full !bg-gradient-to-br !from-orange-300/90 !to-red-400/90 !flex !items-center !justify-center !mr-4 !border-3 !border-yellow-500/60 !shadow-md">
+                              <span className="!text-yellow-100 !text-xl !drop-shadow-md">{session.subject === 'Math' ? '🧮' : session.subject === 'Science' ? '⚗️' : session.subject === 'English' ? '📜' : '📚'}</span>
                             </div>
-                            <div className="!min-w-0 !flex-1">
-                              <h4 className="!font-semibold !text-gray-800 !text-lg !truncate">
-                                {session.subject || "No Subject"}
+                            <div>
+                              <h4 className="!font-bold !text-red-900 !text-lg !drop-shadow-sm break-words">
+                                {session.subject || 'No Subject'}
                               </h4>
-                              <p className="!text-sm !text-gray-600 !truncate">
-                                {new Date(session.startTime).toLocaleDateString("en-US")}
+                              <p className="!text-sm !text-red-700/80">
+                                {new Date(session.startTime).toLocaleDateString()}
                               </p>
                             </div>
                           </div>
-                          <div className="!flex !items-center !space-x-3 !flex-shrink-0">
-                            <div className="!text-center !bg-yellow-50 !px-3 !py-2 !rounded-lg !border !border-yellow-200 !min-w-[70px]">
-                              <p className="!text-xs !text-yellow-700 !font-semibold !whitespace-nowrap">Score</p>
-                              <p className="!font-bold !text-yellow-800 !text-base">{getStudentScore(session)}</p>
+                          <div className="!flex !items-center !space-x-4">
+                            <div className="!text-center !bg-gradient-to-b !from-yellow-200/80 !to-amber-300/80 !px-3 !py-2 !rounded-xl !border-2 !border-yellow-500/50 !shadow-md">
+                              <p className="!text-xs !text-amber-900 !font-bold">Score</p>
+                              <p className="!font-bold !text-amber-900 !text-lg !drop-shadow-sm">{getStudentScore(session)}</p>
                             </div>
-                            <div className="!text-center !bg-green-50 !px-3 !py-2 !rounded-lg !border !border-green-200 !min-w-[70px]">
-                              <p className="!text-xs !text-green-700 !font-semibold !whitespace-nowrap">Rank</p>
-                              <p className="!font-bold !text-green-800 !text-base">#{calculateRank(session)}</p>
+                            <div className="!text-center !bg-gradient-to-b !from-red-200/80 !to-red-400/80 !px-3 !py-2 !rounded-xl !border-2 !border-red-500/50 !shadow-md">
+                              <p className="!text-xs !text-red-100 !font-bold">Rank</p>
+                              <p className="!font-bold !text-red-100 !text-lg !drop-shadow-sm">#{calculateRank(session)}</p>
                             </div>
                           </div>
                         </div>
                       </div>
                     ))}
-
-                  {(!studentProgress.recentSessions || studentProgress.recentSessions.length === 0) && (
-                    <div className="!bg-gray-50 !p-6 !rounded-xl !text-center !border !border-gray-200">
-                      <div className="!w-12 !h-12 !bg-gray-200 !rounded-full !flex !items-center !justify-center !mx-auto !mb-4">
-                        <svg className="!w-6 !h-6 !text-gray-500" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                        </svg>
-                      </div>
-                      <p className="!text-gray-700 !font-semibold !text-sm !mb-2">No sessions yet</p>
-                      <p className="!text-gray-600 !text-xs">Start learning to see history!</p>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
-
-            {/* Right Column - Subject Progress */}
-            <div className="!flex-shrink-0 !w-80 !min-w-0">
-              <div className="!bg-white !rounded-2xl !shadow-lg !p-6 !h-full !flex !flex-col !overflow-hidden">
-                <h3 className="!text-gray-800 !font-bold !text-xl !mb-6 !flex !items-center !justify-center !flex-shrink-0">
-                  <div className="!w-8 !h-8 !bg-purple-100 !rounded-full !flex !items-center !justify-center !mr-3">
-                    <svg className="!w-5 !h-5 !text-purple-600" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zM5 9h14V7H5v2z" />
-                    </svg>
-                  </div>
+          </div>
+      
+          {/* Right Column - Traditional Study Pagoda */}
+          <div className="!flex-shrink-0 !w-80">
+            <div className="!relative !top-6 !h-full !transform !rotate-1 !animate-gentle-float min-w-0 !z-10" style={{ animationDelay: '3s' }}>
+              <div className="!relative !bg-gradient-to-b !from-yellow-200/80 !to-amber-300/80 !backdrop-blur-md !rounded-t-[2rem] !rounded-b-3xl !p-6 !border-4 !border-orange-600/60 !shadow-2xl !flex flex-col">
+               
+                
+                <h3 className="!text-orange-900 !font-bold !text-xl !mb-6 !flex !items-center !justify-center !drop-shadow-lg !relative !z-10">
+                  <span className="!text-2xl !mr-3 !animate-gentle-glow">🎯</span>
                   <div className="!text-center">
-                    <div className="!text-gray-800 !text-lg">Subject Progress</div>
+                    <div className="!text-orange-800 !text-lg">Subject Progress</div>
                   </div>
                 </h3>
-
-                <div className={`!flex-1 !pr-2 !space-y-4 ${studentProgress.subjectProgressList && studentProgress.subjectProgressList.length > 4 ? '!overflow-y-auto' : ''}`}>
+          
+                <div
+                  className={`space-y-3 relative z-10 pr-3 ${
+                    studentProgress.subjectProgressList && studentProgress.subjectProgressList.length > 3
+                      ? 'max-h-[60vh] overflow-y-auto' : ''
+                  }`}
+                >
                   {studentProgress.subjectProgressList && studentProgress.subjectProgressList.length > 0 ? (
                     studentProgress.subjectProgressList.map((sp, idx) => {
                       const subjectSessions = studentProgress.recentSessions
-                        .filter((s) => s.subject === sp.subject)
-                        .sort((a, b) => new Date(b.endTime).getTime() - new Date(a.endTime).getTime())
-                      const lastSession = subjectSessions[0]
-                      const lastScore = lastSession ? getStudentScore(lastSession) : 0
-                      let prevBest = 0
+                        .filter(s => s.subject === sp.subject)
+                        .sort((a, b) => new Date(b.endTime).getTime() - new Date(a.endTime).getTime());
+                      const lastSession = subjectSessions[0];
+                      const lastScore = lastSession ? getStudentScore(lastSession) : 0;
+                      let prevBest = 0;
                       if (subjectSessions.length > 1) {
-                        const prevScores = subjectSessions.slice(1).map((s) => getStudentScore(s))
-                        prevBest = prevScores.length > 0 ? Math.max(...prevScores) : 0
+                        const prevScores = subjectSessions.slice(1).map(s => getStudentScore(s));
+                        prevBest = prevScores.length > 0 ? Math.max(...prevScores) : 0;
                       }
-                      let eduMsg = ""
-                      let eduColor = ""
+                      let eduMsg = '';
+                      let eduColor = '';
+                      let eduIcon: string = '';
                       if (lastScore === sp.bestScore && lastScore > prevBest && lastScore !== 0) {
-                        eduMsg = "New record!"
-                        eduColor = "!text-red-600"
+                        eduMsg = 'New Record!';
+                        eduColor = '!text-red-800';
+                        eduIcon = '🌸';
                       } else if (lastScore === sp.bestScore && lastScore === prevBest && lastScore !== 0) {
-                        eduMsg = "Excellent!"
-                        eduColor = "!text-green-600"
+                        eduMsg = 'Excellent!';
+                        eduColor = '!text-orange-800';
+                        eduIcon = '🎋';
                       } else if (lastScore < sp.bestScore && lastScore !== 0) {
-                        eduMsg = "Keep trying!"
-                        eduColor = "!text-blue-600"
+                        eduMsg = 'Keep going!';
+                        eduColor = '!text-amber-800';
+                        eduIcon = '🍃';
                       } else {
-                        eduMsg = "Start practicing!"
-                        eduColor = "!text-gray-600"
+                        eduMsg = 'Start practicing!';
+                        eduColor = '!text-yellow-800';
+                        eduIcon = '🌿';
                       }
-
+                      
                       return (
-                        <div
-                          key={idx}
-                          className="!bg-gray-50 !p-4 !rounded-xl !border !border-gray-200 !hover:shadow-md !transition-all !duration-300 !flex-shrink-0"
+                        <div 
+                          key={idx} 
+                          className="!relative !bg-gradient-to-br !from-white/80 !to-yellow-50/80 !backdrop-blur-sm !p-4 !rounded-2xl !border-3 !border-amber-400/50 !shadow-lg !hover:shadow-xl !transition-all !duration-500 !transform !hover:scale-105"
                         >
-                          <div className="!flex !items-center !justify-between !mb-3">
-                            <div className="!flex !items-center !flex-1 !min-w-0">
-                              <div className="!w-10 !h-10 !rounded-full !bg-indigo-100 !flex !items-center !justify-center !mr-3 !flex-shrink-0">
-                                <svg className="!w-5 !h-5 !text-indigo-600" fill="currentColor" viewBox="0 0 24 24">
-                                  {sp.subject === "Math" ? (
-                                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" />
-                                  ) : sp.subject === "Science" ? (
-                                    <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zM5 9h14V7H5v2z" />
-                                  ) : (
-                                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h8c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
-                                  )}
-                                </svg>
+                          {/* Traditional scroll texture */}
+                          <div className="!absolute !inset-0 !bg-gradient-to-br !from-transparent !via-amber-100/30 !to-yellow-200/30 !rounded-2xl"></div>
+                          
+                          <div className="!relative !z-10">
+                            <div className="!flex !items-center !justify-between !mb-3">
+                              <div className="!flex !items-center">
+                                <div className="!w-8 !h-8 !rounded-full !bg-gradient-to-br !from-amber-300/90 !to-orange-400/90 !flex !items-center !justify-center !mr-3 !border-2 !border-yellow-500/60 !shadow-md">
+                                  <span className="!text-yellow-100 !text-sm !drop-shadow-sm">{sp.subject === 'Math' ? '🧮' : sp.subject === 'Science' ? '⚗️' : sp.subject === 'English' ? '📜' : '📚'}</span>
+                                </div>
+                                <span className="!font-bold !text-amber-900 !text-lg !drop-shadow-sm break-words">{sp.subject}</span>
                               </div>
-                              <span className="!font-semibold !text-gray-800 !text-base !truncate">{sp.subject}</span>
+                            </div>
+                            
+                            <div className="!flex !justify-between !text-sm !mb-3 !bg-amber-100/50 !p-2 !rounded-lg">
+                              <span className="!text-amber-900">Best: <strong>{sp.bestScore}</strong></span>
+                              <span className="!text-amber-900">Last: <strong>{lastScore}</strong></span>
+                            </div>
+                            
+                            <div className="!flex !items-center !mb-3 !bg-white/60 !p-2 !rounded-lg">
+                              <span className="!text-lg !mr-2 !animate-gentle-glow">{eduIcon}</span>
+                              <p className={`!text-xs !font-bold ${eduColor}`}>{eduMsg}</p>
+                            </div>
+                            
+                            <div className="!relative !h-3 !bg-amber-200/60 !rounded-full !overflow-hidden !border-2 !border-amber-400/40">
+                              <div 
+                                className="!h-full !bg-gradient-to-r !from-amber-500 !to-orange-600 !rounded-full !transition-all !duration-1000 !shadow-inner !animate-progress-glow" 
+                                style={{width: `${Math.min(Math.round((lastScore / 100) * 100), 100)}%`}}
+                              ></div>
                             </div>
                           </div>
-
-                          <div className="!flex !justify-between !text-sm !mb-3 !bg-white !p-3 !rounded-lg !gap-2">
-                            <span className="!text-gray-700 !flex-1 !min-w-0">
-                              Best: <strong className="!text-gray-800">{sp.bestScore}</strong>
-                            </span>
-                            <span className="!text-gray-700 !flex-1 !min-w-0 !text-right">
-                              Recent: <strong className="!text-gray-800">{lastScore}</strong>
-                            </span>
-                          </div>
-
-                          <div className="!mb-3 !bg-white !p-2 !rounded-lg">
-                            <p className={`!text-sm !font-semibold ${eduColor} !truncate`}>{eduMsg}</p>
-                          </div>
-
-                          <div className="!relative !h-2 !bg-gray-200 !rounded-full !overflow-hidden">
-                            <div
-                              className="!h-full !bg-gradient-to-r !from-blue-500 !to-purple-600 !rounded-full !transition-all !duration-1000"
-                              style={{ width: `${Math.min(Math.round((lastScore / 100) * 100), 100)}%` }}
-                            ></div>
-                          </div>
                         </div>
-                      )
+                      );
                     })
                   ) : (
-                    <div className="!bg-gray-50 !p-6 !rounded-xl !text-center !border !border-gray-200">
-                      <div className="!w-12 !h-12 !bg-gray-200 !rounded-full !flex !items-center !justify-center !mx-auto !mb-4">
-                        <svg className="!w-6 !h-6 !text-gray-500" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h8c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
-                        </svg>
-                      </div>
-                      <p className="!text-gray-700 !font-semibold !text-sm !mb-2">No subject data</p>
-                      <p className="!text-gray-600 !text-xs">Start a session to see progress!</p>
+                    <div className="!bg-gradient-to-br !from-white/80 !to-amber-50/80 !p-4 !rounded-2xl !text-center !border-3 !border-amber-400/50 !shadow-lg">
+                      <div className="!text-3xl !mb-2 !animate-gentle-glow">📚</div>
+                      <p className="!text-amber-900 !font-bold !text-sm !mb-1">No subject data available</p>
+                      <p className="!text-amber-700 !text-xs !mt-1">Start a session to see progress!</p>
                     </div>
                   )}
                 </div>
@@ -501,8 +584,11 @@ const ProfileStudent: React.FC = () => {
           </div>
         </div>
       </div>
+    </div>
+
+ 
     </>
-  )
+  );
 }
 
 export default ProfileStudent; 
